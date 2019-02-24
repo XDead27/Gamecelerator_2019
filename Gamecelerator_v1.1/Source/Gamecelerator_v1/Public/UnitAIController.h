@@ -24,6 +24,13 @@ class GAMECELERATOR_V1_API AUnitAIController : public AAIController
 private:
 	AUnit* PossesedUnit;
 
+protected:
+	void ResetAttack();
+
+	bool bCanAttack;
+
+	FTimerHandle UnitAttackHandle;
+
 public:
 	void eventClickedUnit();
 

@@ -8,7 +8,6 @@
 #include "Public/Enumuri.h"
 #include "Unit.generated.h"
 
-
 UENUM(BlueprintType)
 enum class EStatusToPlayer : uint8
 {
@@ -17,10 +16,39 @@ enum class EStatusToPlayer : uint8
 	STP_Hostile		UMETA(DisplayName = "Hostile")
 };
 
+USTRUCT()
+struct FSetupVariables
+{
+	GENERATED_USTRUCT_BODY()
+
+	//Relationship between player and unit
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EStatusToPlayer status;
+
+	//Properties
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Health)
+		float HealthMax;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Health)
+		float Health;
+
+	UPROPERTY(VisibleAnywhere, Category = Damage)
+		float DamagePerHit;
+
+	UPROPERTY(VisibleAnywhere, Category = Damage)
+		float TimeBetweenHits;
+
+	UPROPERTY(VisibleAnywhere, Category = Damage)
+		float AttackRange;
+
+	UPROPERTY(EditAnywhere, Category = Movement)
+		float WalkingSpeed;
+};
+
 UCLASS()
 class GAMECELERATOR_V1_API AUnit : public ACharacter
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 
 public:
 	// Sets default values for this pawn's properties
@@ -52,6 +80,9 @@ public:
 
 	FVector TargetPosition;
 
+	UPROPERTY(EditInstanceOnly, Category = UnitSetup)
+	FSetupVariables SetupVariables;
+
 protected:
 	AController* ControllingAI;
 	AActor* ActorToAttack;
@@ -59,31 +90,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	bool bIsDead;
 
-	//Relationship between player and unit
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	EStatusToPlayer status;
-
-	//Properties
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float HealthMax;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Health;
-
-	UPROPERTY(VisibleAnywhere)
-	float DamagePerHit;
-
-	UPROPERTY(VisibleAnywhere)
-	float TimeBetweenHits;
-
-	UPROPERTY(VisibleAnywhere)
-	float AttackRange;
-
-	UPROPERTY(EditAnywhere)
-	float WalkingSpeed;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool isSelected;
-
-
 };

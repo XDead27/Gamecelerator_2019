@@ -5,6 +5,8 @@
 #include "Public/Structure.h"
 #include "Engine/World.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "Math/Vector.h"
+#include "Public/TimerManager.h"
 
 AUnitAIController::AUnitAIController() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -18,14 +20,13 @@ void AUnitAIController::BeginPlay() {
 	if (PossesedUnit) {
 		PossesedUnit->TargetPosition = PossesedUnit->GetActorLocation();
 	}
+
+	bCanAttack = true;
 }
 
 void AUnitAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if(!PossesedUnit)
-		PossesedUnit = Cast<AUnit>(GetPawn());
 
 	if (PossesedUnit) {
 		if (PossesedUnit->getIsSelected()) {
@@ -34,7 +35,13 @@ void AUnitAIController::Tick(float DeltaTime)
 			switch (PossesedUnit->getStatusToPlayer())
 			{
 			case EStatusToPlayer::STP_Friendly:
-				UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, PossesedUnit->TargetPosition);
+				if (PossesedUnit->GetActorToAttack()){
+					Attack(Cast<AUnit>(PossesedUnit->GetActorToAttack()));
+				}
+				else {
+					UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, PossesedUnit->TargetPosition);
+				}
+
 				break;
 
 			case EStatusToPlayer::STP_Neutral:
@@ -47,12 +54,20 @@ void AUnitAIController::Tick(float DeltaTime)
 				break;
 			}
 
-			if (PossesedUnit->GetActorToAttack()) {
-				Attack(Cast<AUnit>(PossesedUnit->GetActorToAttack()));
-				UE_LOG(LogTemp, Warning, TEXT("Should be attacking"))
-			}
+		}
+		else {
+
 		}
 	}
+	else {
+		PossesedUnit = Cast<AUnit>(GetPawn());
+	}
+}
+
+void AUnitAIController::ResetAttack()
+{
+	bCanAttack = true;
+	GetWorld()->GetTimerManager().ClearTimer(UnitAttackHandle);
 }
 
 void AUnitAIController::eventClickedUnit()
@@ -69,11 +84,21 @@ void AUnitAIController::Attack(AUnit * UnitToAttack)
 {
 	if (UnitToAttack) {
 		if (FVector::Dist(PossesedUnit->GetActorLocation(),UnitToAttack->GetActorLocation()) > PossesedUnit->GetAttackRange()) {
-			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, UnitToAttack->GetActorLocation());
+			UAIBlueprintHelperLibrary::SimpleMoveToActor(this, UnitToAttack);
+
+			UE_LOG(LogTemp, Warning, TEXT("Should go"))
 		}
 		else {
-			//implement delay
-			UnitToAttack->GetDamaged(PossesedUnit->GetDamagePerHit() / PossesedUnit->GetTimeBetweenHits() / GetWorld()->GetDeltaSeconds());
+			//stop the unit and shoot
+			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, PossesedUnit->GetActorLocation());
+			
+			//timer so that the unit can only attack once every x seconds
+			if (bCanAttack) {
+				bCanAttack = false;
+				UnitToAttack->GetDamaged(PossesedUnit->GetDamagePerHit());
+
+				GetWorld()->GetTimerManager().SetTimer(UnitAttackHandle, this, &AUnitAIController::ResetAttack, PossesedUnit->GetTimeBetweenHits(), false);
+			}
 		}
 	}
 }
