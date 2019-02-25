@@ -80,5 +80,21 @@ float AUnit::GetAttackRange()
 	return SetupVariables.AttackRange;
 }
 
+float AUnit::GetHealth()
+{
+	return SetupVariables.Health;
+}
+
+float AUnit::SetHealth(float Amount)
+{
+	SetupVariables.Health = Amount;
+	return SetupVariables.Health;
+}
+
+float AUnit::GetMaxHealth()
+{
+	return SetupVariables.HealthMax;
+}
+
 
 
