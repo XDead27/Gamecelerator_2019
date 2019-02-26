@@ -56,7 +56,8 @@ void AUnitAIController::Tick(float DeltaTime)
 
 		}
 		else {
-
+			//if we want to move or to do womething while we are not selecting it
+			//code should go here
 		}
 	}
 	else {

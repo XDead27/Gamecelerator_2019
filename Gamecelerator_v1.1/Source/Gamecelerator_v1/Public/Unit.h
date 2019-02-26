@@ -8,6 +8,9 @@
 #include "Public/Enumuri.h"
 #include "Unit.generated.h"
 
+///*********************
+//ENUMS
+///*********************
 UENUM(BlueprintType)
 enum class EStatusToPlayer : uint8
 {
@@ -16,8 +19,25 @@ enum class EStatusToPlayer : uint8
 	STP_Hostile		UMETA(DisplayName = "Hostile")
 };
 
+
+///*********************
+//STRUCTS WITH VARIABLES
+///*********************
 USTRUCT(BlueprintType)
-struct FSetupVariables
+struct FHealthVariables
+{
+	GENERATED_USTRUCT_BODY()
+
+	//Properties
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		float HealthMax;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float Health;
+};
+
+USTRUCT(BlueprintType)
+struct FAttackVariables
 {
 	GENERATED_USTRUCT_BODY()
 
@@ -25,26 +45,32 @@ struct FSetupVariables
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EStatusToPlayer status;
 
-	//Properties
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Health)
-		float HealthMax;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Health)
-		float Health;
+	UPROPERTY(VisibleAnywhere, Category = Damage)
+	float DamagePerHit;
 
 	UPROPERTY(VisibleAnywhere, Category = Damage)
-		float DamagePerHit;
+	float TimeBetweenHits;
 
 	UPROPERTY(VisibleAnywhere, Category = Damage)
-		float TimeBetweenHits;
+	float AttackRange;
 
-	UPROPERTY(VisibleAnywhere, Category = Damage)
-		float AttackRange;
-
-	UPROPERTY(EditAnywhere, Category = Movement)
-		float WalkingSpeed;
 };
 
+USTRUCT(BlueprintType)
+struct FMovementVariables
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, Category = Movement)
+	float WalkingSpeed;
+};
+
+
+
+
+///*********************
+//CLASS
+///*********************
 UCLASS()
 class GAMECELERATOR_V1_API AUnit : public ACharacter
 {
@@ -108,5 +134,11 @@ protected:
 
 	//setup variables such as health, damage, etc
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UnitSetup)
-	FSetupVariables SetupVariables;
+	FHealthVariables HealthVariables;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UnitSetup)
+	FAttackVariables AttackVariables;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UnitSetup)
+	FMovementVariables MovementVariables;
 };

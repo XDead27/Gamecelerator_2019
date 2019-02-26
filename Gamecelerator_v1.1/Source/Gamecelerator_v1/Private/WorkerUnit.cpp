@@ -5,11 +5,11 @@
 AWorkerUnit::AWorkerUnit() {
 
 	//specific setup
-	SetupVariables.HealthMax = 50;
-	SetupVariables.Health = SetupVariables.HealthMax;
-	SetupVariables.DamagePerHit = 5;
-	SetupVariables.TimeBetweenHits = 0.7;
-	SetupVariables.AttackRange = 200;
+	HealthVariables.HealthMax = 50;
+	HealthVariables.Health = HealthVariables.HealthMax;
+	AttackVariables.DamagePerHit = 5;
+	AttackVariables.TimeBetweenHits = 0.7;
+	AttackVariables.AttackRange = 200;
 
 
 }

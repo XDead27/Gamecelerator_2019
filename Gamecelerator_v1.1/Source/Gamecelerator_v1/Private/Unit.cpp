@@ -51,7 +51,7 @@ AController * AUnit::getControllingAI()
 
 EStatusToPlayer AUnit::getStatusToPlayer()
 {
-	return SetupVariables.status;
+	return AttackVariables.status;
 }
 
 //Delegates attack to the AIController
@@ -67,33 +67,33 @@ AActor * AUnit::GetActorToAttack()
 
 float AUnit::GetDamagePerHit()
 {
-	return SetupVariables.DamagePerHit;
+	return AttackVariables.DamagePerHit;
 }
 
 float AUnit::GetTimeBetweenHits()
 {
-	return SetupVariables.TimeBetweenHits;
+	return AttackVariables.TimeBetweenHits;
 }
 
 float AUnit::GetAttackRange()
 {
-	return SetupVariables.AttackRange;
+	return AttackVariables.AttackRange;
 }
 
 float AUnit::GetHealth()
 {
-	return SetupVariables.Health;
+	return HealthVariables.Health;
 }
 
 float AUnit::SetHealth(float Amount)
 {
-	SetupVariables.Health = Amount;
-	return SetupVariables.Health;
+	HealthVariables.Health = Amount;
+	return HealthVariables.Health;
 }
 
 float AUnit::GetMaxHealth()
 {
-	return SetupVariables.HealthMax;
+	return HealthVariables.HealthMax;
 }
 
 
