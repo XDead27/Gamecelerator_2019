@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Hazard.generated.h"
 
+class UStaticMeshComponent;
+
 UCLASS()
 class GAMECELERATOR_V1_API AHazard : public AActor
 {
@@ -22,5 +24,9 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Mesh)
+	class UStaticMeshComponent* HazardMesh;
 
 };

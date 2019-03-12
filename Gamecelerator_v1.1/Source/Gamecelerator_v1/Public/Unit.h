@@ -20,6 +20,8 @@ enum class EStatusToPlayer : uint8
 };
 
 
+
+
 ///*********************
 //STRUCTS WITH VARIABLES
 ///*********************
@@ -42,7 +44,7 @@ struct FAttackVariables
 	GENERATED_USTRUCT_BODY()
 
 	//Relationship between player and unit
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite)
 	EStatusToPlayer status;
 
 	UPROPERTY(VisibleAnywhere, Category = Damage)
