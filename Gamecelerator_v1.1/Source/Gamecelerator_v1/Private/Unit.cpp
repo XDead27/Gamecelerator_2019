@@ -96,5 +96,9 @@ float AUnit::GetMaxHealth()
 	return HealthVariables.HealthMax;
 }
 
+void AUnit::Ability_1()
+{
+}
+
 
 

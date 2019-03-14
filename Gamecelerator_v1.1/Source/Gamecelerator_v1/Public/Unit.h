@@ -118,6 +118,10 @@ public:
 	UFUNCTION(BlueprintPure, Category = Variables)
 	float GetMaxHealth();
 
+	//Ability abstract functions
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	virtual void Ability_1();
+
 	//Blueprint mixed functions
 	UFUNCTION(BlueprintImplementableEvent)
 	void GetDamaged(float amount);
