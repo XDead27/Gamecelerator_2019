@@ -19,6 +19,7 @@ class GAMECELERATOR_V1_API APlayerSpectatorPawnController : public APlayerContro
 	APlayerSpectatorPawnController();
 
 private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	AUnit* ControlledUnit;
 
 	bool bMoveToMouseCursor;

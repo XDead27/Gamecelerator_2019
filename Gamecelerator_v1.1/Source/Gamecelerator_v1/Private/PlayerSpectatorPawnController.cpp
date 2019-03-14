@@ -55,15 +55,18 @@ void APlayerSpectatorPawnController::GetUnderMouseCursor()
 	{
 		if (AUnit* Temp = Cast<AUnit>(Hit.Actor)) {
 			if (ControlledUnit) {
+				//If we click on an enemy with a unit already selected then make that unit attack the enemy
 				if (ControlledUnit->getStatusToPlayer() == EStatusToPlayer::STP_Friendly && (Temp->getStatusToPlayer() == EStatusToPlayer::STP_Hostile || Temp->getStatusToPlayer() == EStatusToPlayer::STP_Neutral)) {
 					ControlledUnit->SetActorToAttack(Temp);
 				}
+				//Else just posses the new unit
 				else {
 					ControlledUnit->setIsSelected(false);
 					ControlledUnit = Temp;
 					ControlledUnit->setIsSelected(true);
 				}
 			}
+			//If a unit is not already possesed then just posses the selected unit
 			else {
 				ControlledUnit = Temp;
 				ControlledUnit->setIsSelected(true);
@@ -96,9 +99,6 @@ void APlayerSpectatorPawnController::GetTouchedLocation(const FVector Location)
 		}
 	}
 }
-
-
-
 
 void APlayerSpectatorPawnController::MoveForward(float speed) {
 	CameraMovementInput.X = speed;
