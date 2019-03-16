@@ -26,6 +26,11 @@ private:
 
 	void OnSetDestinationPressed();
 	void OnSetDestinationReleased();
+
+	//RESOURCES
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	int Resource1; //TODO
+
 public:
 	virtual void BeginPlay() override;
 

@@ -32,6 +32,11 @@ void AUnit::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (HealthVariables.Health <= 0) {
+		OnDeath();
+		bIsDead = true;
+	}
+
 }
 
 void AUnit::setIsSelected(bool a)
@@ -49,9 +54,14 @@ AController * AUnit::getControllingAI()
 	return ControllingAI;
 }
 
-EStatusToPlayer AUnit::getStatusToPlayer()
+EStatusToPlayer AUnit::GetStatusToPlayer()
 {
 	return AttackVariables.status;
+}
+
+void AUnit::SetStatusToPlayer(EStatusToPlayer NewStatus)
+{
+	AttackVariables.status = NewStatus;
 }
 
 //Delegates attack to the AIController
@@ -98,6 +108,14 @@ float AUnit::GetMaxHealth()
 
 void AUnit::Ability_1()
 {
+}
+
+void AUnit::OnDeath()
+{
+	//Destroys the actor
+	//Anything that is to be done before or after this action should be included in the
+	//overriden function
+	Destroy();
 }
 
 

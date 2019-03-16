@@ -1,0 +1,8 @@
+SA NE GANDIM:
+-cum facem cu hazard urile si cate o sa fie
+-cum facem interfata unitatilor
+-ce fel de sistem de resurse facem
+-abilitati / unitati
+
+DE COD:
+-in aicontroller si controller sa fie numai cod legat de cum sa fie folosite functiile deja existente de miscare (din pawn si characterele pe care controllerele le poseda)

@@ -56,7 +56,7 @@ void APlayerSpectatorPawnController::GetUnderMouseCursor()
 		if (AUnit* Temp = Cast<AUnit>(Hit.Actor)) {
 			if (ControlledUnit) {
 				//If we click on an enemy with a unit already selected then make that unit attack the enemy
-				if (ControlledUnit->getStatusToPlayer() == EStatusToPlayer::STP_Friendly && (Temp->getStatusToPlayer() == EStatusToPlayer::STP_Hostile || Temp->getStatusToPlayer() == EStatusToPlayer::STP_Neutral)) {
+				if (ControlledUnit->GetStatusToPlayer() == EStatusToPlayer::STP_Friendly && (Temp->GetStatusToPlayer() == EStatusToPlayer::STP_Hostile || Temp->GetStatusToPlayer() == EStatusToPlayer::STP_Neutral)) {
 					ControlledUnit->SetActorToAttack(Temp);
 				}
 				//Else just posses the new unit

@@ -32,7 +32,7 @@ void AUnitAIController::Tick(float DeltaTime)
 		if (PossesedUnit->getIsSelected()) {
 			eventClickedUnit();
 
-			switch (PossesedUnit->getStatusToPlayer())
+			switch (PossesedUnit->GetStatusToPlayer())
 			{
 			case EStatusToPlayer::STP_Friendly:
 				if (PossesedUnit->GetActorToAttack()){

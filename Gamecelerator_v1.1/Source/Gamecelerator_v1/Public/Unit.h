@@ -90,13 +90,16 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	//Getters and Setters
+	//Getters and Setters 
 	void setIsSelected(bool);
 	bool getIsSelected();
 	AController* getControllingAI();
 
 	UFUNCTION(BlueprintPure, Category = Variables)
-	EStatusToPlayer getStatusToPlayer();
+	EStatusToPlayer GetStatusToPlayer();
+
+	UFUNCTION(BlueprintPure, Category = Variables)
+	void SetStatusToPlayer(EStatusToPlayer status);
 
 	void SetActorToAttack(AActor* ActorToAttack);
 	AActor* GetActorToAttack();
@@ -117,10 +120,6 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = Variables)
 	float GetMaxHealth();
-
-	//Ability abstract functions
-	UFUNCTION(BlueprintCallable, Category = Abilities)
-	virtual void Ability_1();
 
 	//Blueprint mixed functions
 	UFUNCTION(BlueprintImplementableEvent)
@@ -147,4 +146,11 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UnitSetup)
 	FMovementVariables MovementVariables;
+
+	///Gameplay Functions
+	//Ability abstract functions
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	virtual void Ability_1();
+
+	virtual void OnDeath();
 };

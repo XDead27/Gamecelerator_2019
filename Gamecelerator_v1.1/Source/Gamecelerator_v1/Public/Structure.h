@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Public/Enumuri.h"
+#include "Unit.h"
 #include "Structure.generated.h"
 
 class AUnit;
@@ -39,7 +40,7 @@ protected:
 	FVector SpawningOffset;
 
 	UFUNCTION(BlueprintCallable, Category = "SunShine")
-	void SpawnUnit(TSubclassOf<AUnit> unitclass);
+	void SpawnUnit(TSubclassOf<AUnit> unitclass, EStatusToPlayer status);
 
 public:
 	bool trainUnit();
