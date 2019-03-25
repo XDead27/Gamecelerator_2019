@@ -98,7 +98,7 @@ public:
 	UFUNCTION(BlueprintPure, Category = Variables)
 	EStatusToPlayer GetStatusToPlayer();
 
-	UFUNCTION(BlueprintPure, Category = Variables)
+	UFUNCTION(BlueprintCallable, Category = Variables)
 	void SetStatusToPlayer(EStatusToPlayer status);
 
 	void SetActorToAttack(AActor* ActorToAttack);
@@ -152,5 +152,6 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	virtual void Ability_1();
 
+	//General functions
 	virtual void OnDeath();
 };

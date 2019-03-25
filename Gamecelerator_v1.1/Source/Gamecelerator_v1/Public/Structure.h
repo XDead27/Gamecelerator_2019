@@ -28,7 +28,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
-	STATUS statusToPlayer;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EStatusToPlayer statusToPlayer;
 
 	float Health;
 	bool isClicked;
@@ -43,6 +44,6 @@ protected:
 	void SpawnUnit(TSubclassOf<AUnit> unitclass, EStatusToPlayer status);
 
 public:
-	bool trainUnit();
-	void showInterface();
+	bool TrainUnit();
+	void ShowInterface();
 };

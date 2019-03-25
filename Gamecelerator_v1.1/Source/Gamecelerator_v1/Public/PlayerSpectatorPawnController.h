@@ -39,7 +39,7 @@ public:
 	void GetUnderMouseCursor();
 	void GetTouchedLocation(const FVector Location);
 
-	//
+	//Camera movements
 	void MoveForward(float speed);
 	void MoveRight(float speed);
 

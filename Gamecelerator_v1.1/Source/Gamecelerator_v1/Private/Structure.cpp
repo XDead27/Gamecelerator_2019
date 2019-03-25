@@ -13,7 +13,7 @@ AStructure::AStructure()
 	PrimaryActorTick.bCanEverTick = true;
 
 	StructureMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Structure Mesh"));
-	StructureMesh->SetupAttachment(RootComponent);
+	RootComponent = StructureMesh;
 
 }
 
@@ -40,12 +40,12 @@ void AStructure::SpawnUnit(TSubclassOf<AUnit> unitclass, EStatusToPlayer status)
 	spawnedunit->SetStatusToPlayer(status);
 }
 
-bool AStructure::trainUnit()
+bool AStructure::TrainUnit()
 {
 	return false;
 }
 
-void AStructure::showInterface()
+void AStructure::ShowInterface()
 {
 }
 

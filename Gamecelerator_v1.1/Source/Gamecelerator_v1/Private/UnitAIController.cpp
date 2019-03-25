@@ -58,6 +58,9 @@ void AUnitAIController::Tick(float DeltaTime)
 		else {
 			//if we want to move or to do womething while we are not selecting it
 			//code should go here
+			if (PossesedUnit->GetActorToAttack()){
+					Attack(Cast<AUnit>(PossesedUnit->GetActorToAttack()));
+			}
 		}
 	}
 	else {
@@ -84,10 +87,10 @@ void AUnitAIController::moveCharacter()
 void AUnitAIController::Attack(AUnit * UnitToAttack)
 {
 	if (UnitToAttack) {
-		if (FVector::Dist(PossesedUnit->GetActorLocation(),UnitToAttack->GetActorLocation()) > PossesedUnit->GetAttackRange()) {
+		if (FVector::Dist(PossesedUnit->GetActorLocation(), UnitToAttack->GetActorLocation()) > PossesedUnit->GetAttackRange()) {
 			UAIBlueprintHelperLibrary::SimpleMoveToActor(this, UnitToAttack);
 
-			UE_LOG(LogTemp, Warning, TEXT("Should go"))
+			//UE_LOG(LogTemp, Warning, TEXT("Should go"))
 		}
 		else {
 			//stop the unit and shoot
