@@ -6,15 +6,37 @@
 #include "Structure.h"
 #include "ResourceStructure.generated.h"
 
+class UStaticMeshComponent;
+
 /**
  * 
  */
+
+UENUM(BlueprintType)
+enum class EResourceType : uint8
+{
+	RT_Wood	UMETA(DisplayName = "Wood")
+	//To Add
+};
+
+
 UCLASS()
 class GAMECELERATOR_V1_API AResourceStructure : public AActor
 {
 	GENERATED_BODY()
 
 public:
-	//TODO
+	AResourceStructure();
 	
+	//Mesh
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = BaseMesh)
+	class UStaticMeshComponent* BaseMesh;
+
+	//Stats
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	EResourceType ResourceType;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int ResourcesMax;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	int ResourcesLeft;
 };
