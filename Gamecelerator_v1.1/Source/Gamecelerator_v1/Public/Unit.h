@@ -97,7 +97,6 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = Variables)
 	EStatusToPlayer GetStatusToPlayer();
-
 	UFUNCTION(BlueprintCallable, Category = Variables)
 	void SetStatusToPlayer(EStatusToPlayer status);
 
@@ -131,6 +130,7 @@ protected:
 	AController* ControllingAI;
 	AActor* ActorToAttack;
 	
+	//nu cred ca ne trebuie momentan
 	UPROPERTY(BlueprintReadOnly)
 	bool bIsDead;
 

@@ -22,10 +22,14 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	AUnit* ControlledUnit;
 
-	bool bMoveToMouseCursor;
+	//Actor buffer for requested selection periods
+	AActor* ActorBuffer;
 
-	void OnSetDestinationPressed();
-	void OnSetDestinationReleased();
+	bool bMoveToMouseCursor;
+	bool bIsSelectObjectRequested;
+
+	void OnClickPressed();
+	void OnClickReleased();
 
 	//RESOURCES
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -36,8 +40,12 @@ public:
 
 	virtual void PlayerTick(float DeltaTime) override;
 	virtual void SetupInputComponent() override;
+	//Must fix this
 	void GetUnderMouseCursor();
 	void GetTouchedLocation(const FVector Location);
+
+	//Returns the first clicked actor
+	AActor* SelectObjectSequence(TSubclassOf<AActor> ClassToSelect);
 
 	//Camera movements
 	void MoveForward(float speed);

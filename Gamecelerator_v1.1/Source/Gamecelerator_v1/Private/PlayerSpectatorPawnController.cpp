@@ -26,10 +26,16 @@ void APlayerSpectatorPawnController::PlayerTick(float DeltaTime)
 	CameraLocation += GetPawn()->GetActorRightVector() * CameraMovementInput.Y * DeltaTime;
 	GetPawn()->SetActorLocation(CameraLocation);
 
+	if (bIsSelectObjectRequested) {
+		//De rezolvat asta. O functie care opreste orice alta selectie ca sa se poata selecta un obiect nou care va fi returnat
+		ActorBuffer = SelectObjectSequence;
 
-	if (bMoveToMouseCursor)
-	{
-		GetUnderMouseCursor();
+	}
+	else {
+		if (bMoveToMouseCursor)
+		{
+			GetUnderMouseCursor();
+		}
 	}
 }
 
@@ -37,8 +43,8 @@ void APlayerSpectatorPawnController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	InputComponent->BindAction("SetDestination", IE_Pressed, this, &APlayerSpectatorPawnController::OnSetDestinationPressed);
-	InputComponent->BindAction("SetDestination", IE_Released, this, &APlayerSpectatorPawnController::OnSetDestinationReleased);
+	InputComponent->BindAction("SetDestination", IE_Pressed, this, &APlayerSpectatorPawnController::OnClickPressed);
+	InputComponent->BindAction("SetDestination", IE_Released, this, &APlayerSpectatorPawnController::OnClickReleased);
 
 	InputComponent->BindAxis("MoveForward", this, &APlayerSpectatorPawnController::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &APlayerSpectatorPawnController::MoveRight);
@@ -100,6 +106,23 @@ void APlayerSpectatorPawnController::GetTouchedLocation(const FVector Location)
 	}
 }
 
+AActor * APlayerSpectatorPawnController::SelectObjectSequence(TSubclassOf<AActor> ClassToSelect)
+{
+	AActor* ActorFound = nullptr;
+
+	FHitResult HitResultUnderMouse;
+
+	if (bMoveToMouseCursor) {
+		GetHitResultUnderCursor(ECC_Visibility, false, HitResultUnderMouse);
+		ActorFound = Cast<AActor>(HitResultUnderMouse.Actor);
+		if (HitResultUnderMouse.Actor->StaticClass() != ClassToSelect) {
+			ActorFound = nullptr;
+		}
+	}
+
+	return ActorFound;
+}
+
 void APlayerSpectatorPawnController::MoveForward(float speed) {
 	CameraMovementInput.X = speed;
 }
@@ -108,13 +131,13 @@ void APlayerSpectatorPawnController::MoveRight(float speed) {
 	CameraMovementInput.Y = speed;
 }
 
-void APlayerSpectatorPawnController::OnSetDestinationPressed()
+void APlayerSpectatorPawnController::OnClickPressed()
 {
 	// set flag to keep updating destination until released
 	bMoveToMouseCursor = true;
 }
 
-void APlayerSpectatorPawnController::OnSetDestinationReleased()
+void APlayerSpectatorPawnController::OnClickReleased()
 {
 	// clear flag to indicate we should stop updating the destination
 	bMoveToMouseCursor = false;
