@@ -5,10 +5,13 @@
 #include "Public/Unit.h"
 #include "Engine/World.h"
 #include "Math/UnrealMathVectorCommon.h"
+#include "ClickingComponent.h"
 
 
 APlayerSpectatorPawnController::APlayerSpectatorPawnController() {
 	bShowMouseCursor = true;
+
+	ClickComp = CreateDefaultSubobject<UClickingComponent>(TEXT("ClickingComponent"));
 }
 
 void APlayerSpectatorPawnController::BeginPlay()
@@ -26,16 +29,9 @@ void APlayerSpectatorPawnController::PlayerTick(float DeltaTime)
 	CameraLocation += GetPawn()->GetActorRightVector() * CameraMovementInput.Y * DeltaTime;
 	GetPawn()->SetActorLocation(CameraLocation);
 
-	if (bIsSelectObjectRequested) {
-		//De rezolvat asta. O functie care opreste orice alta selectie ca sa se poata selecta un obiect nou care va fi returnat
-		ActorBuffer = SelectObjectSequence;
-
-	}
-	else {
-		if (bMoveToMouseCursor)
-		{
-			GetUnderMouseCursor();
-		}
+	if (bMoveToMouseCursor)
+	{
+		GetUnderMouseCursor();
 	}
 }
 
@@ -57,9 +53,9 @@ void APlayerSpectatorPawnController::GetUnderMouseCursor()
 	FHitResult Hit;
 	GetHitResultUnderCursor(ECC_Visibility, false, Hit);
 
-	if (Hit.bBlockingHit)
+	if (ClickedActor)
 	{
-		if (AUnit* Temp = Cast<AUnit>(Hit.Actor)) {
+		if (AUnit* Temp = Cast<AUnit>(ClickedActor)) {
 			if (ControlledUnit) {
 				//If we click on an enemy with a unit already selected then make that unit attack the enemy
 				if (ControlledUnit->GetStatusToPlayer() == EStatusToPlayer::STP_Friendly && (Temp->GetStatusToPlayer() == EStatusToPlayer::STP_Hostile || Temp->GetStatusToPlayer() == EStatusToPlayer::STP_Neutral)) {
@@ -88,41 +84,6 @@ void APlayerSpectatorPawnController::GetUnderMouseCursor()
 	
 }
 
-void APlayerSpectatorPawnController::GetTouchedLocation(const FVector Location)
-{
-	FVector2D ScreenSpaceLocation(Location);
-
-	// Trace to see what is under the touch location
-	FHitResult HitResult;
-	GetHitResultAtScreenPosition(ScreenSpaceLocation, CurrentClickTraceChannel, true, HitResult);
-	if (HitResult.bBlockingHit)
-	{
-		if (Cast<AUnit>(HitResult.Actor)) {
-			UE_LOG(LogTemp, Warning, TEXT("E o unitate"))
-		}
-		else {
-			// We hit something, move there
-		}
-	}
-}
-
-AActor * APlayerSpectatorPawnController::SelectObjectSequence(TSubclassOf<AActor> ClassToSelect)
-{
-	AActor* ActorFound = nullptr;
-
-	FHitResult HitResultUnderMouse;
-
-	if (bMoveToMouseCursor) {
-		GetHitResultUnderCursor(ECC_Visibility, false, HitResultUnderMouse);
-		ActorFound = Cast<AActor>(HitResultUnderMouse.Actor);
-		if (HitResultUnderMouse.Actor->StaticClass() != ClassToSelect) {
-			ActorFound = nullptr;
-		}
-	}
-
-	return ActorFound;
-}
-
 void APlayerSpectatorPawnController::MoveForward(float speed) {
 	CameraMovementInput.X = speed;
 }
@@ -135,10 +96,12 @@ void APlayerSpectatorPawnController::OnClickPressed()
 {
 	// set flag to keep updating destination until released
 	bMoveToMouseCursor = true;
+	ClickComp->Click();
 }
 
 void APlayerSpectatorPawnController::OnClickReleased()
 {
 	// clear flag to indicate we should stop updating the destination
 	bMoveToMouseCursor = false;
+	ClickComp->UnClick();
 }

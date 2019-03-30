@@ -25,10 +25,9 @@ private:
 	AUnit* PossesedUnit;
 
 protected:
+	//For attack delay
 	void ResetAttack();
-
 	bool bCanAttack;
-
 	FTimerHandle UnitAttackHandle;
 
 public:

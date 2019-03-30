@@ -7,6 +7,7 @@
 #include "PlayerSpectatorPawnController.generated.h"
 
 class AUnit;
+class UClickingComponent;
 
 /**
  * 
@@ -21,9 +22,6 @@ class GAMECELERATOR_V1_API APlayerSpectatorPawnController : public APlayerContro
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	AUnit* ControlledUnit;
-
-	//Actor buffer for requested selection periods
-	AActor* ActorBuffer;
 
 	bool bMoveToMouseCursor;
 	bool bIsSelectObjectRequested;
@@ -42,14 +40,15 @@ public:
 	virtual void SetupInputComponent() override;
 	//Must fix this
 	void GetUnderMouseCursor();
-	void GetTouchedLocation(const FVector Location);
-
-	//Returns the first clicked actor
-	AActor* SelectObjectSequence(TSubclassOf<AActor> ClassToSelect);
 
 	//Camera movements
 	void MoveForward(float speed);
 	void MoveRight(float speed);
+
+	//For clicking component ONLY
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Click)
+	class UClickingComponent* ClickComp;
+	AActor* ClickedActor;
 
 private:
 	FVector2D CameraMovementInput;
