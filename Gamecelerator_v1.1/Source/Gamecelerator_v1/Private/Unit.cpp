@@ -64,11 +64,6 @@ void AUnit::SetStatusToPlayer(EStatusToPlayer NewStatus)
 	AttackVariables.status = NewStatus;
 }
 
-//Delegates attack to the AIController
-void AUnit::SetActorToAttack(AActor * ActorToAttack)
-{
-	this->ActorToAttack = ActorToAttack;
-}
 
 AActor * AUnit::GetActorToAttack()
 {
@@ -108,6 +103,18 @@ float AUnit::GetMaxHealth()
 
 void AUnit::Ability_1()
 {
+}
+
+void AUnit::Move(FVector NewLoc)
+{
+	TargetPosition = NewLoc;
+	Attack(nullptr);
+}
+
+//Delegates attack to the AIController
+void AUnit::Attack(AActor * ActorToAttack)
+{
+	this->ActorToAttack = ActorToAttack;
 }
 
 void AUnit::OnDeath()

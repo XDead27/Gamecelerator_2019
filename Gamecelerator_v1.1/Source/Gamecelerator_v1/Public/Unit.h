@@ -9,20 +9,6 @@
 #include "Unit.generated.h"
 
 ///*********************
-//ENUMS
-///*********************
-UENUM(BlueprintType)
-enum class EStatusToPlayer : uint8
-{
-	STP_Friendly	UMETA(DisplayName = "Friendly"),
-	STP_Neutral		UMETA(DisplayName = "Neutral"),
-	STP_Hostile		UMETA(DisplayName = "Hostile")
-};
-
-
-
-
-///*********************
 //STRUCTS WITH VARIABLES
 ///*********************
 USTRUCT(BlueprintType)
@@ -90,6 +76,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	///Unit Functions
+	virtual void Move(FVector NewLoc);
+	virtual void Attack(AActor* ActorToAttack);
+
 	//Getters and Setters 
 	void setIsSelected(bool);
 	bool getIsSelected();
@@ -100,7 +90,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Variables)
 	void SetStatusToPlayer(EStatusToPlayer status);
 
-	void SetActorToAttack(AActor* ActorToAttack);
 	AActor* GetActorToAttack();
 
 	UFUNCTION(BlueprintPure, Category = Variables)
@@ -152,6 +141,6 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	virtual void Ability_1();
 
-	//General functions
+	//General natural functions
 	virtual void OnDeath();
 };

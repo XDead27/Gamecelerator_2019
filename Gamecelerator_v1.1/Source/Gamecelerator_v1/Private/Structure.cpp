@@ -40,6 +40,11 @@ void AStructure::SpawnUnit(TSubclassOf<AUnit> unitclass, EStatusToPlayer status)
 	spawnedunit->SetStatusToPlayer(status);
 }
 
+EStatusToPlayer AStructure::GetStatusToPlayer()
+{
+	return statusToPlayer;
+}
+
 bool AStructure::TrainUnit()
 {
 	return false;

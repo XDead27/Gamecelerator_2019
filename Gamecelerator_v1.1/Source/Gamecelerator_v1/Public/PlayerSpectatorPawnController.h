@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Public/Enumuri.h"
 #include "PlayerSpectatorPawnController.generated.h"
 
 class AUnit;
@@ -23,11 +24,12 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	AUnit* ControlledUnit;
 
-	bool bMoveToMouseCursor;
+	bool bIsClicking;
 	bool bIsSelectObjectRequested;
 
 	void OnClickPressed();
 	void OnClickReleased();
+	ENextClickFlag ClickFlag;
 
 	//RESOURCES
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -38,8 +40,17 @@ public:
 
 	virtual void PlayerTick(float DeltaTime) override;
 	virtual void SetupInputComponent() override;
-	//Must fix this
-	void GetUnderMouseCursor();
+
+	//Classifies clicks by attributed flags
+	void ClassifyByFlag();
+	//Attributes flags to clicks without specific input - will be modified by taste
+	void GiveNormalFlags();
+
+	//Selects an actor
+	void SelectActor(AActor* ActorToSelect);
+	void FlagAttack();
+	void FlagSelect();
+	void FlagMove();
 
 	//Camera movements
 	void MoveForward(float speed);
@@ -49,6 +60,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Click)
 	class UClickingComponent* ClickComp;
 	AActor* ClickedActor;
+	FVector ClickedLocation;
 
 private:
 	FVector2D CameraMovementInput;

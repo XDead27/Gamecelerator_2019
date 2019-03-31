@@ -29,10 +29,19 @@ void APlayerSpectatorPawnController::PlayerTick(float DeltaTime)
 	CameraLocation += GetPawn()->GetActorRightVector() * CameraMovementInput.Y * DeltaTime;
 	GetPawn()->SetActorLocation(CameraLocation);
 
-	if (bMoveToMouseCursor)
-	{
-		GetUnderMouseCursor();
-	}
+	
+	FHitResult hitty;
+	GetHitResultUnderCursor(ECC_Visibility, false, hitty);
+
+	//Do not register the click unless the clicked actor is AUnit or AStructure
+	if (Cast<AUnit>(hitty.GetActor()) || Cast<AStructure>(hitty.GetActor()))
+		ClickedActor = Cast<AActor>(hitty.GetActor());
+	ClickedLocation = hitty.ImpactPoint;
+	
+	if(bIsClicking)
+		//Clasify actions by next click flags
+		ClassifyByFlag();
+
 }
 
 void APlayerSpectatorPawnController::SetupInputComponent()
@@ -41,47 +50,72 @@ void APlayerSpectatorPawnController::SetupInputComponent()
 
 	InputComponent->BindAction("SetDestination", IE_Pressed, this, &APlayerSpectatorPawnController::OnClickPressed);
 	InputComponent->BindAction("SetDestination", IE_Released, this, &APlayerSpectatorPawnController::OnClickReleased);
+	InputComponent->BindAction("Attack", IE_Pressed, this, &APlayerSpectatorPawnController::FlagAttack);
+	InputComponent->BindAction("Move", IE_Pressed, this, &APlayerSpectatorPawnController::FlagMove);
 
 	InputComponent->BindAxis("MoveForward", this, &APlayerSpectatorPawnController::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &APlayerSpectatorPawnController::MoveRight);
 
 }
 
-void APlayerSpectatorPawnController::GetUnderMouseCursor()
+void APlayerSpectatorPawnController::ClassifyByFlag()
 {
-	// Trace to see what is under the mouse cursor
-	FHitResult Hit;
-	GetHitResultUnderCursor(ECC_Visibility, false, Hit);
-
-	if (ClickedActor)
+	switch (ClickFlag)
 	{
-		if (AUnit* Temp = Cast<AUnit>(ClickedActor)) {
-			if (ControlledUnit) {
-				//If we click on an enemy with a unit already selected then make that unit attack the enemy
-				if (ControlledUnit->GetStatusToPlayer() == EStatusToPlayer::STP_Friendly && (Temp->GetStatusToPlayer() == EStatusToPlayer::STP_Hostile || Temp->GetStatusToPlayer() == EStatusToPlayer::STP_Neutral)) {
-					ControlledUnit->SetActorToAttack(Temp);
-				}
-				//Else just posses the new unit
-				else {
-					ControlledUnit->setIsSelected(false);
-					ControlledUnit = Temp;
-					ControlledUnit->setIsSelected(true);
-				}
-			}
-			//If a unit is not already possesed then just posses the selected unit
-			else {
-				ControlledUnit = Temp;
-				ControlledUnit->setIsSelected(true);
-			}
+	case ENextClickFlag::NCF_Move:
+		if (ControlledUnit)
+			ControlledUnit->Move(ClickedLocation);
+		break;
+
+	case ENextClickFlag::NCF_Attack:
+		if (ControlledUnit && ClickedActor)
+			ControlledUnit->Attack(ClickedActor);
+		break;
+
+	case ENextClickFlag::NCF_Select:
+		if (ClickedActor) {
+			SelectActor(ClickedActor);
 		}
-		else{
-			if (ControlledUnit) {
-				ControlledUnit->TargetPosition = Hit.ImpactPoint;
-				ControlledUnit->SetActorToAttack(nullptr); //in cazul in care trebuia sa atace un actor, il deselecteaza
-			}
-		}
+		break;
+
+	case ENextClickFlag::NCF_Esc:
+		SelectActor(nullptr);
+		break;
+
+	default:
+		break;
 	}
-	
+}
+
+void APlayerSpectatorPawnController::GiveNormalFlags()
+{
+	//TODO
+}
+
+void APlayerSpectatorPawnController::SelectActor(AActor* ActorToSelect)
+{
+	if (Cast<AUnit>(ActorToSelect)) {
+		if(ControlledUnit)
+			ControlledUnit->setIsSelected(false);
+		ControlledUnit = Cast<AUnit>(ActorToSelect);
+		ControlledUnit->setIsSelected(true);
+		ControlledUnit->Move(ControlledUnit->GetActorLocation());
+	}
+}
+
+void APlayerSpectatorPawnController::FlagAttack()
+{
+	ClickFlag = ENextClickFlag::NCF_Attack;
+}
+
+void APlayerSpectatorPawnController::FlagSelect()
+{
+	ClickFlag = ENextClickFlag::NCF_Select;
+}
+
+void APlayerSpectatorPawnController::FlagMove()
+{
+	ClickFlag = ENextClickFlag::NCF_Move;
 }
 
 void APlayerSpectatorPawnController::MoveForward(float speed) {
@@ -95,13 +129,16 @@ void APlayerSpectatorPawnController::MoveRight(float speed) {
 void APlayerSpectatorPawnController::OnClickPressed()
 {
 	// set flag to keep updating destination until released
-	bMoveToMouseCursor = true;
-	ClickComp->Click();
+	//ClickComp->Click();
+
+	bIsClicking = true;
 }
 
 void APlayerSpectatorPawnController::OnClickReleased()
 {
 	// clear flag to indicate we should stop updating the destination
-	bMoveToMouseCursor = false;
-	ClickComp->UnClick();
+	ClickFlag = ENextClickFlag::NCF_Select;
+	//ClickComp->UnClick();
+
+	bIsClicking = false;
 }

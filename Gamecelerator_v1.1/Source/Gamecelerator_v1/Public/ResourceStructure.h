@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Structure.h"
+#include "Public/Enumuri.h"
 #include "ResourceStructure.generated.h"
 
 class UStaticMeshComponent;
@@ -12,12 +13,7 @@ class UStaticMeshComponent;
  * 
  */
 
-UENUM(BlueprintType)
-enum class EResourceType : uint8
-{
-	RT_Wood	UMETA(DisplayName = "Wood")
-	//To Add
-};
+
 
 
 UCLASS()

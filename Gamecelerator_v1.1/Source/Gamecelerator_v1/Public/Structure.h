@@ -44,6 +44,8 @@ protected:
 	void SpawnUnit(TSubclassOf<AUnit> unitclass, EStatusToPlayer status);
 
 public:
+	EStatusToPlayer GetStatusToPlayer();
+
 	bool TrainUnit();
 	void ShowInterface();
 };
