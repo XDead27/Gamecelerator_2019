@@ -26,6 +26,7 @@ enum class ENextClickFlag : uint8
 	NCF_Move	UMETA(DisplayName = "MoveNext"),
 	NCF_Attack	UMETA(DisplayName = "AttackNext"),
 	NCF_Select	UMETA(DisplayName = "SelectNext"),
-	NCF_Esc	UMETA(DisplayName = "NoneNext")
+	NCF_Esc		UMETA(DisplayName = "NoneNext"),
+	NCF_Gather	UMETA(DisplayName = "GatherNext")
 	//to add
 };

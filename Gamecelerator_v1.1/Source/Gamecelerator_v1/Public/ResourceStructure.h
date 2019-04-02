@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Structure.h"
+#include "StructurePrimitive.h"
 #include "Public/Enumuri.h"
 #include "ResourceStructure.generated.h"
 
@@ -13,20 +13,13 @@ class UStaticMeshComponent;
  * 
  */
 
-
-
-
 UCLASS()
-class GAMECELERATOR_V1_API AResourceStructure : public AActor
+class GAMECELERATOR_V1_API AResourceStructure : public AStructurePrimitive
 {
 	GENERATED_BODY()
 
 public:
 	AResourceStructure();
-	
-	//Mesh
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = BaseMesh)
-	class UStaticMeshComponent* BaseMesh;
 
 	//Stats
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
@@ -35,4 +28,7 @@ public:
 	int ResourcesMax;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	int ResourcesLeft;
+
+	//For gather function
+	void GetHarvested(int Amount);
 };

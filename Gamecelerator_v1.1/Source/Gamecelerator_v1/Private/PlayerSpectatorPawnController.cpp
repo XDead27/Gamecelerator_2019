@@ -29,18 +29,28 @@ void APlayerSpectatorPawnController::PlayerTick(float DeltaTime)
 	CameraLocation += GetPawn()->GetActorRightVector() * CameraMovementInput.Y * DeltaTime;
 	GetPawn()->SetActorLocation(CameraLocation);
 
-	
+	///See what is under the cursor for every frame
+	//Declare the hit result
 	FHitResult hitty;
 	GetHitResultUnderCursor(ECC_Visibility, false, hitty);
 
 	//Do not register the click unless the clicked actor is AUnit or AStructure
 	if (Cast<AUnit>(hitty.GetActor()) || Cast<AStructure>(hitty.GetActor()))
 		ClickedActor = Cast<AActor>(hitty.GetActor());
+	else
+		ClickedActor = nullptr;
+	//Always update the cursor location in world space
 	ClickedLocation = hitty.ImpactPoint;
 	
-	if(bIsClicking)
+	if (bIsClicking) {
+		//Attrivute normal flags depending on preference
+		GiveNormalFlags();
 		//Clasify actions by next click flags
 		ClassifyByFlag();
+		//**
+		//Uncomment if you want single clicks
+		//bIsClicking = false;
+	}
 
 }
 
@@ -52,6 +62,9 @@ void APlayerSpectatorPawnController::SetupInputComponent()
 	InputComponent->BindAction("SetDestination", IE_Released, this, &APlayerSpectatorPawnController::OnClickReleased);
 	InputComponent->BindAction("Attack", IE_Pressed, this, &APlayerSpectatorPawnController::FlagAttack);
 	InputComponent->BindAction("Move", IE_Pressed, this, &APlayerSpectatorPawnController::FlagMove);
+	InputComponent->BindAction("Escape", IE_Pressed, this, &APlayerSpectatorPawnController::FlagEsc);
+
+	InputComponent->BindAction("Ability1", IE_Pressed, this, &APlayerSpectatorPawnController::UnitAbility1);
 
 	InputComponent->BindAxis("MoveForward", this, &APlayerSpectatorPawnController::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &APlayerSpectatorPawnController::MoveRight);
@@ -74,7 +87,13 @@ void APlayerSpectatorPawnController::ClassifyByFlag()
 
 	case ENextClickFlag::NCF_Select:
 		if (ClickedActor) {
-			SelectActor(ClickedActor);
+			if (!UnitToParseTo) {
+				SelectActor(ClickedActor);
+			}
+			else {
+				UnitToParseTo->SetParsedActor(ClickedActor);
+				UnitToParseTo = nullptr;
+			}
 		}
 		break;
 
@@ -89,7 +108,12 @@ void APlayerSpectatorPawnController::ClassifyByFlag()
 
 void APlayerSpectatorPawnController::GiveNormalFlags()
 {
-	//TODO
+	if (ClickFlag == DefaultFlag) {
+		//If a unit is selected but there is nothing under the cursor then activate the move flag
+		if (ControlledUnit && !ClickedActor) {
+			FlagMove();
+		}
+	}
 }
 
 void APlayerSpectatorPawnController::SelectActor(AActor* ActorToSelect)
@@ -118,6 +142,29 @@ void APlayerSpectatorPawnController::FlagMove()
 	ClickFlag = ENextClickFlag::NCF_Move;
 }
 
+void APlayerSpectatorPawnController::FlagEsc()
+{
+	ClickFlag = ENextClickFlag::NCF_Esc;
+}
+
+void APlayerSpectatorPawnController::FlagGather()
+{
+	ClickFlag = ENextClickFlag::NCF_Gather;
+}
+
+void APlayerSpectatorPawnController::UnitAbility1()
+{
+	if (ControlledUnit) {
+		ControlledUnit->Ability_1();
+	}
+}
+
+void APlayerSpectatorPawnController::SetParsingSelectToUnit(AUnit * UnitToParseTo)
+{
+	ClickFlag = ENextClickFlag::NCF_Select;
+	this->UnitToParseTo = UnitToParseTo;
+}
+
 void APlayerSpectatorPawnController::MoveForward(float speed) {
 	CameraMovementInput.X = speed;
 }
@@ -136,9 +183,6 @@ void APlayerSpectatorPawnController::OnClickPressed()
 
 void APlayerSpectatorPawnController::OnClickReleased()
 {
-	// clear flag to indicate we should stop updating the destination
-	ClickFlag = ENextClickFlag::NCF_Select;
-	//ClickComp->UnClick();
-
+	ClickFlag = DefaultFlag;
 	bIsClicking = false;
 }

@@ -51,10 +51,22 @@ public:
 	void FlagAttack();
 	void FlagSelect();
 	void FlagMove();
+	void FlagEsc();
+	void FlagGather();
+
+	void UnitAbility1();
+
+	//Parsing of selected actors
+	void SetParsingSelectToUnit(AUnit* UnitToParseTo);
+	AUnit* UnitToParseTo;
 
 	//Camera movements
 	void MoveForward(float speed);
 	void MoveRight(float speed);
+
+	//Flag properties
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Flags)
+	ENextClickFlag DefaultFlag = ENextClickFlag::NCF_Select;
 
 	//For clicking component ONLY
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Click)

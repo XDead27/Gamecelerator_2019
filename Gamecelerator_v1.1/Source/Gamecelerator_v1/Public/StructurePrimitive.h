@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "StructurePrimitive.generated.h"
 
+class UBoxComponent;
+
 UCLASS()
 class GAMECELERATOR_V1_API AStructurePrimitive : public AActor
 {
@@ -23,4 +25,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	//The basic box collision
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Collision)
+	class UBoxComponent* BoxCollision;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Collision)
+	bool bDisableBoxCollision; //TODO
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Mesh)
+	class UStaticMeshComponent* StructureMesh;
 };

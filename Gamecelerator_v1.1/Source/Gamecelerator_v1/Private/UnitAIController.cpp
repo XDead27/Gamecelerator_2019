@@ -89,8 +89,6 @@ void AUnitAIController::Attack(AUnit * UnitToAttack)
 	if (UnitToAttack) {
 		if (FVector::Dist(PossesedUnit->GetActorLocation(), UnitToAttack->GetActorLocation()) > PossesedUnit->GetAttackRange()) {
 			UAIBlueprintHelperLibrary::SimpleMoveToActor(this, UnitToAttack);
-
-			//UE_LOG(LogTemp, Warning, TEXT("Should go"))
 		}
 		else {
 			//stop the unit and shoot

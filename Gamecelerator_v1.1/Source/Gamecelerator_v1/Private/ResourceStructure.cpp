@@ -6,6 +6,9 @@
 
 AResourceStructure::AResourceStructure() {
 	
-	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Base Mesh"));
-	RootComponent = BaseMesh;
+}
+
+void AResourceStructure::GetHarvested(int Amount)
+{
+	ResourcesLeft -= Amount;
 }

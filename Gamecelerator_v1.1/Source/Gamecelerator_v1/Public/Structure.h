@@ -6,12 +6,13 @@
 #include "GameFramework/Actor.h"
 #include "Public/Enumuri.h"
 #include "Unit.h"
+#include "StructurePrimitive.h"
 #include "Structure.generated.h"
 
 class AUnit;
 
 UCLASS()
-class GAMECELERATOR_V1_API AStructure : public AActor
+class GAMECELERATOR_V1_API AStructure : public AStructurePrimitive
 {
 	GENERATED_BODY()
 	
@@ -33,9 +34,6 @@ protected:
 
 	float Health;
 	bool isClicked;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* StructureMesh;
 
 	UPROPERTY(EditAnywhere)
 	FVector SpawningOffset;

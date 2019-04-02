@@ -114,6 +114,7 @@ public:
 	void GetDamaged(float amount);
 
 	FVector TargetPosition;
+	void SetParsedActor(AActor* Actor);
 
 protected:
 	AController* ControllingAI;
@@ -136,6 +137,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UnitSetup)
 	FMovementVariables MovementVariables;
 
+public:
+	///Not that good things
+	virtual void WaitForParsing(AActor* &a);
+	virtual void WaitForParsing(TArray<AActor*> &arr);
+	AActor* ParsedActor;
+
 	///Gameplay Functions
 	//Ability abstract functions
 	UFUNCTION(BlueprintCallable, Category = Abilities)
@@ -143,4 +150,5 @@ protected:
 
 	//General natural functions
 	virtual void OnDeath();
+	virtual void OnStop();
 };

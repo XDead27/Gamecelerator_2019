@@ -4,6 +4,8 @@
 #include "Public/UnitAIController.h"
 #include "Public/Structure.h"
 #include "Blueprint/UserWidget.h"
+#include "Public/PlayerSpectatorPawnController.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AUnit::AUnit()
@@ -101,6 +103,43 @@ float AUnit::GetMaxHealth()
 	return HealthVariables.HealthMax;
 }
 
+void AUnit::SetParsedActor(AActor * Actor)
+{
+	ParsedActor = Actor;
+}
+
+void AUnit::WaitForParsing(AActor* &a)
+{
+	if (a == nullptr) {
+		APlayerSpectatorPawnController* playercont = Cast<APlayerSpectatorPawnController>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+		playercont->SetParsingSelectToUnit(this);
+
+		if (ParsedActor) {
+			a = ParsedActor;
+			ParsedActor = nullptr;
+		}
+	}
+}
+
+void AUnit::WaitForParsing(TArray<AActor*> &arr)
+{
+	//tries every actor in the array
+	for (AActor* e : arr) {
+		if (!e) {
+			APlayerSpectatorPawnController* playercont = Cast<APlayerSpectatorPawnController>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+			playercont->SetParsingSelectToUnit(this);
+
+			if (ParsedActor) {
+				e = ParsedActor;
+				ParsedActor = nullptr;
+			}
+			else {
+				break;
+			}
+		}
+	}
+}
+
 void AUnit::Ability_1()
 {
 }
@@ -123,6 +162,12 @@ void AUnit::OnDeath()
 	//Anything that is to be done before or after this action should be included in the
 	//overriden function
 	Destroy();
+}
+
+void AUnit::OnStop()
+{
+	Move(this->GetActorLocation());
+	Attack(nullptr);
 }
 
 
