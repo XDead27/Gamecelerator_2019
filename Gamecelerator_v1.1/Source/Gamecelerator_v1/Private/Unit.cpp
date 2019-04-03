@@ -108,38 +108,6 @@ void AUnit::SetParsedActor(AActor * Actor)
 	ParsedActor = Actor;
 }
 
-void AUnit::WaitForParsing(AActor* &a)
-{
-	if (a == nullptr) {
-		APlayerSpectatorPawnController* playercont = Cast<APlayerSpectatorPawnController>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-		playercont->SetParsingSelectToUnit(this);
-
-		if (ParsedActor) {
-			a = ParsedActor;
-			ParsedActor = nullptr;
-		}
-	}
-}
-
-void AUnit::WaitForParsing(TArray<AActor*> &arr)
-{
-	//tries every actor in the array
-	for (AActor* e : arr) {
-		if (!e) {
-			APlayerSpectatorPawnController* playercont = Cast<APlayerSpectatorPawnController>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-			playercont->SetParsingSelectToUnit(this);
-
-			if (ParsedActor) {
-				e = ParsedActor;
-				ParsedActor = nullptr;
-			}
-			else {
-				break;
-			}
-		}
-	}
-}
-
 void AUnit::Ability_1()
 {
 }

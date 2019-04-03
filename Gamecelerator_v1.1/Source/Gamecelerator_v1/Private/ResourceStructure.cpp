@@ -5,10 +5,25 @@
 #include "Components/InstancedStaticMeshComponent.h"
 
 AResourceStructure::AResourceStructure() {
-	
+	ResourcesLeft = ResourcesMax;
 }
 
-void AResourceStructure::GetHarvested(int Amount)
+void AResourceStructure::BeginPlay()
 {
-	ResourcesLeft -= Amount;
+	Super::BeginPlay();
+
+	ResourcesLeft = ResourcesMax;
+}
+
+int AResourceStructure::GetHarvested(int Amount)
+{
+	if (ResourcesLeft >= Amount) {
+		ResourcesLeft -= Amount;
+	}
+	else {
+		Amount = ResourcesLeft;
+		ResourcesLeft = 0;
+	}
+
+	return Amount;
 }

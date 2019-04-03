@@ -114,7 +114,6 @@ public:
 	void GetDamaged(float amount);
 
 	FVector TargetPosition;
-	void SetParsedActor(AActor* Actor);
 
 protected:
 	AController* ControllingAI;
@@ -138,9 +137,10 @@ protected:
 	FMovementVariables MovementVariables;
 
 public:
-	///Not that good things
-	virtual void WaitForParsing(AActor* &a);
-	virtual void WaitForParsing(TArray<AActor*> &arr);
+	///Parameter Actors
+	template <class T>
+	void WaitForParsing(T* &a);
+	void SetParsedActor(AActor* Actor);
 	AActor* ParsedActor;
 
 	///Gameplay Functions
@@ -152,3 +152,21 @@ public:
 	virtual void OnDeath();
 	virtual void OnStop();
 };
+
+//Template functions
+template <class T>
+void AUnit::WaitForParsing(T* &a) {
+	if (a == nullptr) {
+		APlayerSpectatorPawnController* playercont = Cast<APlayerSpectatorPawnController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+		if (playercont)
+			playercont->SetParsingSelectToUnit(this);
+		else
+			UE_LOG(LogTemp, Warning, TEXT("PlayerConroller not found"))
+
+
+		if (Cast<T>(ParsedActor)) {
+			a = Cast<T>(ParsedActor);
+			ParsedActor = nullptr;
+		}
+	}
+}

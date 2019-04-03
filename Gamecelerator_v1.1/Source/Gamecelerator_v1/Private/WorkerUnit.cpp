@@ -7,6 +7,8 @@
 #include "Structure.h"
 #include "Public/TimerManager.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
+
 
 AWorkerUnit::AWorkerUnit() {
 
@@ -32,15 +34,12 @@ void AWorkerUnit::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	if (bIsGathering) {
-		UE_LOG(LogTemp, Warning, TEXT("macar a intrat aici"))
 
 		if (!(StructureToGatherFrom && StructureToGatherTo)) {
-			AActor* Temp = nullptr;
-			WaitForParsing(Temp);
+			WaitForParsing(StructureToGatherFrom);
+			WaitForParsing(StructureToGatherTo);
 		}
 		else {
-			UE_LOG(LogTemp, Warning, TEXT("%s, %s"), *StructureToGatherTo->GetName(), *StructureToGatherFrom->GetName())
-
 			Gather();
 		}
 	}
@@ -53,25 +52,37 @@ void AWorkerUnit::Ability_1()
 
 void AWorkerUnit::OnStop()
 {
+	AUnit::OnStop();
 	StopGather();
 }
 
 void AWorkerUnit::Gather()
 {
 	if (bIsReturningFromResource) {
-		this->TargetPosition = StructureToGatherTo->GetActorLocation();
+		this->Move(StructureToGatherTo->GetActorLocation());
 		
-		if (FVector::Dist(this->GetActorLocation(), StructureToGatherTo->GetActorLocation()) < GatherDistance) {
+		if (this->IsOverlappingActor(StructureToGatherTo)) {
 			bIsReturningFromResource = false;
+
+			APlayerSpectatorPawnController* playercont = Cast<APlayerSpectatorPawnController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+			if (playercont) {
+				playercont->AddResource(EResourceType::RT_Wood, HoldingResources);
+				UE_LOG(LogTemp, Warning, TEXT("Added %d"), HoldingResources)
+				HoldingResources = 0;
+			}
+			else {
+				UE_LOG(LogTemp, Warning, TEXT("PlayerConroller not found"))
+			}
 		}
 	}
 	else {
-		this->TargetPosition = StructureToGatherFrom->GetActorLocation();
+		this->Move(StructureToGatherFrom->GetActorLocation());
 
-		UE_LOG(LogTemp, Warning, TEXT("%f, %f, %f"), StructureToGatherFrom->GetComponentsBoundingBox().GetSize().X, StructureToGatherFrom->GetComponentsBoundingBox().GetSize().Y, StructureToGatherFrom->GetComponentsBoundingBox().GetSize().Z);
-
-		if (FVector::Dist(this->GetActorLocation(), StructureToGatherFrom->GetActorLocation()) < GatherDistance) {
+		if(this->IsOverlappingActor(StructureToGatherFrom)){
 			bIsReturningFromResource = true;
+
+			if(HoldingResources <= MaxHoldResources)
+				HoldingResources += StructureToGatherFrom->GetHarvested(5);
 		}
 	}
 }
@@ -83,23 +94,3 @@ void AWorkerUnit::StopGather()
 	StructureToGatherTo = nullptr;
 }
 
-void AWorkerUnit::WaitForParsing(AActor *& a)
-{
-	AUnit::WaitForParsing(a);
-
-	/*if (a) {
-		if (Cast<AResourceStructure>(a) && !StructureToGatherFrom) {
-			StructureToGatherFrom = Cast<AResourceStructure>(a);
-		}
-		else {
-			a = nullptr;
-		}
-
-		if (Cast<AStructure>(a) && !StructureToGatherTo) {
-			StructureToGatherTo = Cast<AStructure>(a);
-		}
-		else {
-			a = nullptr;
-		}
-	}*/
-}

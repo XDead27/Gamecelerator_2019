@@ -21,6 +21,10 @@ class GAMECELERATOR_V1_API AResourceStructure : public AStructurePrimitive
 public:
 	AResourceStructure();
 
+protected:
+	virtual void BeginPlay() override;
+
+public:
 	//Stats
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	EResourceType ResourceType;
@@ -30,5 +34,5 @@ public:
 	int ResourcesLeft;
 
 	//For gather function
-	void GetHarvested(int Amount);
+	int GetHarvested(int Amount);
 };

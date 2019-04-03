@@ -35,7 +35,7 @@ void APlayerSpectatorPawnController::PlayerTick(float DeltaTime)
 	GetHitResultUnderCursor(ECC_Visibility, false, hitty);
 
 	//Do not register the click unless the clicked actor is AUnit or AStructure
-	if (Cast<AUnit>(hitty.GetActor()) || Cast<AStructure>(hitty.GetActor()))
+	if (Cast<AUnit>(hitty.GetActor()) || Cast<AStructurePrimitive>(hitty.GetActor()))
 		ClickedActor = Cast<AActor>(hitty.GetActor());
 	else
 		ClickedActor = nullptr;
@@ -52,6 +52,12 @@ void APlayerSpectatorPawnController::PlayerTick(float DeltaTime)
 		//bIsClicking = false;
 	}
 
+
+
+	///DEBUG
+	//if(ClickedActor)
+	//	UE_LOG(LogTemp, Warning, TEXT("%s"), *ClickedActor->GetClass()->GetFName().ToString())
+
 }
 
 void APlayerSpectatorPawnController::SetupInputComponent()
@@ -63,6 +69,7 @@ void APlayerSpectatorPawnController::SetupInputComponent()
 	InputComponent->BindAction("Attack", IE_Pressed, this, &APlayerSpectatorPawnController::FlagAttack);
 	InputComponent->BindAction("Move", IE_Pressed, this, &APlayerSpectatorPawnController::FlagMove);
 	InputComponent->BindAction("Escape", IE_Pressed, this, &APlayerSpectatorPawnController::FlagEsc);
+	InputComponent->BindAction("Stop", IE_Pressed, this, &APlayerSpectatorPawnController::UnitStop);
 
 	InputComponent->BindAction("Ability1", IE_Pressed, this, &APlayerSpectatorPawnController::UnitAbility1);
 
@@ -87,12 +94,12 @@ void APlayerSpectatorPawnController::ClassifyByFlag()
 
 	case ENextClickFlag::NCF_Select:
 		if (ClickedActor) {
-			if (!UnitToParseTo) {
-				SelectActor(ClickedActor);
-			}
-			else {
+			if (UnitToParseTo) {
 				UnitToParseTo->SetParsedActor(ClickedActor);
 				UnitToParseTo = nullptr;
+			}
+			else {
+				SelectActor(ClickedActor);
 			}
 		}
 		break;
@@ -125,6 +132,11 @@ void APlayerSpectatorPawnController::SelectActor(AActor* ActorToSelect)
 		ControlledUnit->setIsSelected(true);
 		ControlledUnit->Move(ControlledUnit->GetActorLocation());
 	}
+	else if (ActorToSelect == nullptr) {
+		if (ControlledUnit)
+			ControlledUnit->setIsSelected(false);
+		ControlledUnit = nullptr;
+	}
 }
 
 void APlayerSpectatorPawnController::FlagAttack()
@@ -152,6 +164,12 @@ void APlayerSpectatorPawnController::FlagGather()
 	ClickFlag = ENextClickFlag::NCF_Gather;
 }
 
+void APlayerSpectatorPawnController::UnitStop()
+{
+	if(ControlledUnit)
+		ControlledUnit->OnStop();
+}
+
 void APlayerSpectatorPawnController::UnitAbility1()
 {
 	if (ControlledUnit) {
@@ -159,9 +177,22 @@ void APlayerSpectatorPawnController::UnitAbility1()
 	}
 }
 
+void APlayerSpectatorPawnController::AddResource(EResourceType restype, int amount)
+{
+	switch (restype)
+	{
+	case EResourceType::RT_Wood:
+		Resource1 += amount;
+		break;
+
+	default:
+		break;
+	}
+}
+
 void APlayerSpectatorPawnController::SetParsingSelectToUnit(AUnit * UnitToParseTo)
 {
-	ClickFlag = ENextClickFlag::NCF_Select;
+	FlagSelect();
 	this->UnitToParseTo = UnitToParseTo;
 }
 

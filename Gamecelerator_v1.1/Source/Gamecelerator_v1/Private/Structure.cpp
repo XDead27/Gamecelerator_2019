@@ -34,7 +34,8 @@ void AStructure::SpawnUnit(TSubclassOf<AUnit> unitclass, EStatusToPlayer status)
 	FVector spawnloc = GetActorLocation() + SpawningOffset;
 
 	AUnit* spawnedunit = Cast<AUnit>(GetWorld()->SpawnActor(unitclass, &spawnloc));
-	spawnedunit->SetStatusToPlayer(status);
+	if(spawnedunit)
+		spawnedunit->SetStatusToPlayer(status);
 }
 
 EStatusToPlayer AStructure::GetStatusToPlayer()

@@ -37,19 +37,23 @@ public:
 	void Gather();
 	void StopGather();
 
-protected:
-	//Virtual function
-	virtual void WaitForParsing(AActor* &a) override;
-
 public:
 	//Specific attributes
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = TypeDefaults)
-	float GatherDistance;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = TypeDefaults)
+	float GatherDistance = 200.0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TypeDefaults)
+	int MaxHoldResources = 5;
 
 private:
+	//Targets for gather
 	AResourceStructure* StructureToGatherFrom;
 	AStructure* StructureToGatherTo;
 
+	//Gather flags
 	bool bIsGathering = false;
 	bool bIsReturningFromResource = false;
+
+	//Variables
+	int HoldingResources = 0;
 };

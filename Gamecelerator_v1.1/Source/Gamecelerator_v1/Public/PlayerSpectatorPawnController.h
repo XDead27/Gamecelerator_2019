@@ -36,16 +36,17 @@ private:
 	int Resource1; //TODO
 
 public:
+	///Native
 	virtual void BeginPlay() override;
 
 	virtual void PlayerTick(float DeltaTime) override;
 	virtual void SetupInputComponent() override;
 
+	///Click Flags
 	//Classifies clicks by attributed flags
 	void ClassifyByFlag();
 	//Attributes flags to clicks without specific input - will be modified by taste
 	void GiveNormalFlags();
-
 	//Selects an actor
 	void SelectActor(AActor* ActorToSelect);
 	void FlagAttack();
@@ -53,8 +54,13 @@ public:
 	void FlagMove();
 	void FlagEsc();
 	void FlagGather();
+	void UnitStop();
 
+	///Abilities
 	void UnitAbility1();
+
+	///Resource
+	void AddResource(EResourceType restype, int amount);
 
 	//Parsing of selected actors
 	void SetParsingSelectToUnit(AUnit* UnitToParseTo);
@@ -68,7 +74,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Flags)
 	ENextClickFlag DefaultFlag = ENextClickFlag::NCF_Select;
 
-	//For clicking component ONLY
+	///For clicking component ONLY
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Click)
 	class UClickingComponent* ClickComp;
 	AActor* ClickedActor;
