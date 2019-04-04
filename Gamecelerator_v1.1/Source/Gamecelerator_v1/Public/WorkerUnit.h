@@ -41,9 +41,15 @@ public:
 	//Specific attributes
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = TypeDefaults)
 	float GatherDistance = 200.0;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = TypeDefaults)
+	float GatherDelay = 1.5; //In Seconds
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TypeDefaults)
-	int MaxHoldResources = 5;
+	int MaxHoldResources = 10;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TypeDefaults)
+	int MaxHarvestResources = 5;
+
 
 private:
 	//Targets for gather
@@ -54,6 +60,12 @@ private:
 	bool bIsGathering = false;
 	bool bIsReturningFromResource = false;
 
+	//Gather delay
+	void ResetGather();
+	bool bCanGather;
+	FTimerHandle UnitGatherHandle;
+
 	//Variables
 	int HoldingResources = 0;
+	EResourceType HoldingResourcesType;
 };

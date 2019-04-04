@@ -35,4 +35,5 @@ public:
 
 	//For gather function
 	int GetHarvested(int Amount);
+	int GetResourcesLeft();
 };

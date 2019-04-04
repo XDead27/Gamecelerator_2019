@@ -95,7 +95,7 @@ void APlayerSpectatorPawnController::ClassifyByFlag()
 	case ENextClickFlag::NCF_Select:
 		if (ClickedActor) {
 			if (UnitToParseTo) {
-				UnitToParseTo->SetParsedActor(ClickedActor);
+				UnitToParseTo->SetParameterActor(ClickedActor);
 				UnitToParseTo = nullptr;
 			}
 			else {
@@ -179,14 +179,8 @@ void APlayerSpectatorPawnController::UnitAbility1()
 
 void APlayerSpectatorPawnController::AddResource(EResourceType restype, int amount)
 {
-	switch (restype)
-	{
-	case EResourceType::RT_Wood:
+	if (restype == Resource1Type) {
 		Resource1 += amount;
-		break;
-
-	default:
-		break;
 	}
 }
 

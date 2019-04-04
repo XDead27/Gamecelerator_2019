@@ -20,15 +20,4 @@ class GAMECELERATOR_V1_API ATreeStructure : public AResourceStructure
 public:
 	ATreeStructure();
 
-	//Meshes
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Trees)
-	class UInstancedStaticMeshComponent* Trees;
-	UPROPERTY(BlueprintREadWrite, EditAnywhere, Category = Trees)
-	int NumberOfTreesRow;
-	UPROPERTY(BlueprintREadWrite, EditAnywhere, Category = Trees)
-	int NumberOfTreesColumn;*/
-
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = TreesS)
-	//class UActorComponent* Trees;
-
 };

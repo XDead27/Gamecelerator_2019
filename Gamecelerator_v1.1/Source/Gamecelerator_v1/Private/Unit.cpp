@@ -15,7 +15,6 @@ AUnit::AUnit()
 
 	isSelected = false;
 
-	TargetPosition = GetActorLocation();
 
 	AIControllerClass = AUnitAIController::StaticClass(); 
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
@@ -27,6 +26,8 @@ void AUnit::BeginPlay()
 	Super::BeginPlay();
 	
 	ControllingAI = GetController();
+	TargetPosition = GetActorLocation();
+
 }
 
 // Called every frame
@@ -103,9 +104,9 @@ float AUnit::GetMaxHealth()
 	return HealthVariables.HealthMax;
 }
 
-void AUnit::SetParsedActor(AActor * Actor)
+void AUnit::SetParameterActor(AActor * Actor)
 {
-	ParsedActor = Actor;
+	ParameterActor = Actor;
 }
 
 void AUnit::Ability_1()
@@ -116,6 +117,11 @@ void AUnit::Move(FVector NewLoc)
 {
 	TargetPosition = NewLoc;
 	Attack(nullptr);
+}
+
+void AUnit::StopMove()
+{
+	Move(this->GetActorLocation());
 }
 
 //Delegates attack to the AIController

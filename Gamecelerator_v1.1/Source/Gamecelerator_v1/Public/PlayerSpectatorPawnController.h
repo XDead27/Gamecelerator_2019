@@ -33,7 +33,9 @@ private:
 
 	//RESOURCES
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	int Resource1; //TODO
+	int Resource1;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	EResourceType Resource1Type = EResourceType::RT_Wood;
 
 public:
 	///Native

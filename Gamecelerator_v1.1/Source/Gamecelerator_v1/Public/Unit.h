@@ -78,6 +78,7 @@ public:
 
 	///Unit Functions
 	virtual void Move(FVector NewLoc);
+	virtual void StopMove();
 	virtual void Attack(AActor* ActorToAttack);
 
 	//Getters and Setters 
@@ -118,6 +119,7 @@ public:
 protected:
 	AController* ControllingAI;
 	AActor* ActorToAttack;
+	AActor* ParameterActor;
 	
 	//nu cred ca ne trebuie momentan
 	UPROPERTY(BlueprintReadOnly)
@@ -140,8 +142,7 @@ public:
 	///Parameter Actors
 	template <class T>
 	void WaitForParsing(T* &a);
-	void SetParsedActor(AActor* Actor);
-	AActor* ParsedActor;
+	void SetParameterActor(AActor* Actor);
 
 	///Gameplay Functions
 	//Ability abstract functions
@@ -164,9 +165,9 @@ void AUnit::WaitForParsing(T* &a) {
 			UE_LOG(LogTemp, Warning, TEXT("PlayerConroller not found"))
 
 
-		if (Cast<T>(ParsedActor)) {
-			a = Cast<T>(ParsedActor);
-			ParsedActor = nullptr;
+		if (Cast<T>(ParameterActor)) {
+			a = Cast<T>(ParameterActor);
+			ParameterActor = nullptr;
 		}
 	}
 }

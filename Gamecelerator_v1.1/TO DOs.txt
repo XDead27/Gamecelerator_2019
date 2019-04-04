@@ -6,3 +6,11 @@ SA NE GANDIM:
 
 DE COD:
 -in aicontroller si controller sa fie numai cod legat de cum sa fie folosite functiile deja existente de miscare (din pawn si characterele pe care controllerele le poseda)
+
+	Mechanics:
+	-Colectat resurse (DONE)
+	-UI
+	-Interactionat cu alte unitati
+	-De regandit toata mecanica cu Friendly, Neutral si Hostile
+	-Construit cladiri
+	-AI

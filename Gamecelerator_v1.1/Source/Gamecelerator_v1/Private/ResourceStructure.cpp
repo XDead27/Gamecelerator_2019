@@ -27,3 +27,8 @@ int AResourceStructure::GetHarvested(int Amount)
 
 	return Amount;
 }
+
+int AResourceStructure::GetResourcesLeft()
+{
+	return ResourcesLeft;
+}

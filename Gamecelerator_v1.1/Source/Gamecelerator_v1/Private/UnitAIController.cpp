@@ -29,38 +29,29 @@ void AUnitAIController::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	if (PossesedUnit) {
-		if (PossesedUnit->getIsSelected()) {
+		if (PossesedUnit->getIsSelected())
 			eventClickedUnit();
 
-			switch (PossesedUnit->GetStatusToPlayer())
-			{
-			case EStatusToPlayer::STP_Friendly:
-				if (PossesedUnit->GetActorToAttack()){
-					Attack(Cast<AUnit>(PossesedUnit->GetActorToAttack()));
-				}
-				else {
-					UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, PossesedUnit->TargetPosition);
-				}
-
-				break;
-
-			case EStatusToPlayer::STP_Neutral:
-				break;
-
-			case EStatusToPlayer::STP_Hostile:
-				break;
-
-			default:
-				break;
-			}
-
-		}
-		else {
-			//if we want to move or to do womething while we are not selecting it
-			//code should go here
+		switch (PossesedUnit->GetStatusToPlayer())
+		{
+		case EStatusToPlayer::STP_Friendly:
 			if (PossesedUnit->GetActorToAttack()){
-					Attack(Cast<AUnit>(PossesedUnit->GetActorToAttack()));
+				Attack(Cast<AUnit>(PossesedUnit->GetActorToAttack()));
 			}
+			else {
+				UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, PossesedUnit->TargetPosition);
+			}
+
+			break;
+
+		case EStatusToPlayer::STP_Neutral:
+			break;
+
+		case EStatusToPlayer::STP_Hostile:
+			break;
+
+		default:
+			break;
 		}
 	}
 	else {
