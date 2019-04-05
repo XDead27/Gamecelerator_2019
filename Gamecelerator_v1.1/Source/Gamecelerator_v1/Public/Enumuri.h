@@ -7,6 +7,7 @@
 UENUM(BlueprintType)
 enum class EStatusToPlayer : uint8
 {
+	STP_Owned		UMETA(DisplayName = "Owned"),
 	STP_Friendly	UMETA(DisplayName = "Friendly"),
 	STP_Neutral		UMETA(DisplayName = "Neutral"),
 	STP_Hostile		UMETA(DisplayName = "Hostile"),

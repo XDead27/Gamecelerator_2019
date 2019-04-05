@@ -12,5 +12,8 @@ DE COD:
 	-UI
 	-Interactionat cu alte unitati
 	-De regandit toata mecanica cu Friendly, Neutral si Hostile
+		-de facut o clasa RaceController cu variabile pentru Allied, Enemy si Neutral RaceControllers
+		-De refacut GetStatusToPlayer in Unit.h
 	-Construit cladiri
 	-AI
+	-De pus Interface uri la Structuri si unitati si de refacut codul unde se diferentiaza

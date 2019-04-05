@@ -37,7 +37,6 @@ void AUnit::Tick(float DeltaTime)
 
 	if (HealthVariables.Health <= 0) {
 		OnDeath();
-		bIsDead = true;
 	}
 
 }

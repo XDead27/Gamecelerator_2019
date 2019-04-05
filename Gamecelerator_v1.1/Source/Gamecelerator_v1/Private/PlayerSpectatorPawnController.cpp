@@ -6,12 +6,14 @@
 #include "Engine/World.h"
 #include "Math/UnrealMathVectorCommon.h"
 #include "ClickingComponent.h"
+#include "DiplomacyHandlerComponent.h"
 
 
 APlayerSpectatorPawnController::APlayerSpectatorPawnController() {
 	bShowMouseCursor = true;
 
-	ClickComp = CreateDefaultSubobject<UClickingComponent>(TEXT("ClickingComponent"));
+	//Subobjects
+	DiplomacyComponent = CreateDefaultSubobject<UDiplomacyHandlerComponent>(TEXT("Diplomacy Component"));
 }
 
 void APlayerSpectatorPawnController::BeginPlay()

@@ -8,7 +8,7 @@
 #include "PlayerSpectatorPawnController.generated.h"
 
 class AUnit;
-class UClickingComponent;
+class UDiplomacyHandlerComponent;
 
 /**
  * 
@@ -42,7 +42,14 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void PlayerTick(float DeltaTime) override;
+
 	virtual void SetupInputComponent() override;
+
+	///Diplomacy
+	//The component holding the array of allied, hostile and neutral controllers
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Diplomacy)
+	class UDiplomacyHandlerComponent* DiplomacyComponent;
+
 
 	///Click Flags
 	//Classifies clicks by attributed flags
@@ -76,9 +83,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Flags)
 	ENextClickFlag DefaultFlag = ENextClickFlag::NCF_Select;
 
-	///For clicking component ONLY
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Click)
-	class UClickingComponent* ClickComp;
+	///For clicking ONLY
 	AActor* ClickedActor;
 	FVector ClickedLocation;
 

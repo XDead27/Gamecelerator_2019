@@ -86,10 +86,13 @@ public:
 	bool getIsSelected();
 	AController* getControllingAI();
 
+	///Status to Player
 	UFUNCTION(BlueprintPure, Category = Variables)
 	EStatusToPlayer GetStatusToPlayer();
 	UFUNCTION(BlueprintCallable, Category = Variables)
 	void SetStatusToPlayer(EStatusToPlayer status);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
+	AController* Possesor;
 
 	AActor* GetActorToAttack();
 
@@ -118,12 +121,9 @@ public:
 
 protected:
 	AController* ControllingAI;
+	//ActorToAttack should be replaced with ParameterActor for future updates
 	AActor* ActorToAttack;
 	AActor* ParameterActor;
-	
-	//nu cred ca ne trebuie momentan
-	UPROPERTY(BlueprintReadOnly)
-	bool bIsDead;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool isSelected;
