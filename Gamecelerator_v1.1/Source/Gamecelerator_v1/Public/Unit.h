@@ -88,9 +88,7 @@ public:
 
 	///Status to Player
 	UFUNCTION(BlueprintPure, Category = Variables)
-	EStatusToPlayer GetStatusToPlayer();
-	UFUNCTION(BlueprintCallable, Category = Variables)
-	void SetStatusToPlayer(EStatusToPlayer status);
+	EStatusToPlayer GetStatusToPlayer(AController* RequestingController);
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
 	AController* Possesor;
 

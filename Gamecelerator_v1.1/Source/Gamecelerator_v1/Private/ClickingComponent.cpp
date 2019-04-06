@@ -97,28 +97,28 @@ FHitActorStats UClickingComponent::GetObjectUnderMouseCursorAttributes()
 	//Declare the return struct
 	FHitActorStats ReturnStats;
 
-	//Get whatever actor is under the mouse cursor
-	FHitResult ParentCursorHit;
-	Parent->GetHitResultUnderCursor(ECC_Visibility, false, ParentCursorHit);
-	AActor* TempActor = GetObjectAtHit<AActor>(ParentCursorHit);
+	////Get whatever actor is under the mouse cursor
+	//FHitResult ParentCursorHit;
+	//Parent->GetHitResultUnderCursor(ECC_Visibility, false, ParentCursorHit);
+	//AActor* TempActor = GetObjectAtHit<AActor>(ParentCursorHit);
 
-	//Check if it is AUnit or AStructure
-	if (AUnit* temp1 = Cast<AUnit>(TempActor)) {
-		ReturnStats.ActorType = AUnit::StaticClass();
-		
-	}
-	else if (AStructure* temp2 = Cast<AStructure>(TempActor)) {
-		ReturnStats.ActorType = AStructure::StaticClass();
-		ReturnStats.ActorLocation = temp2->GetActorLocation();
-		ReturnStats.ActorStatus = temp2->GetStatusToPlayer();
-	}
-	else {
-		ReturnStats.ActorType = NULL;
-		ReturnStats.ActorLocation = ParentCursorHit.ImpactPoint;
-		ReturnStats.ActorStatus = EStatusToPlayer::STP_None;
-	}
+	////Check if it is AUnit or AStructure
+	//if (AUnit* temp1 = Cast<AUnit>(TempActor)) {
+	//	ReturnStats.ActorType = AUnit::StaticClass();
+	//	
+	//}
+	//else if (AStructure* temp2 = Cast<AStructure>(TempActor)) {
+	//	ReturnStats.ActorType = AStructure::StaticClass();
+	//	ReturnStats.ActorLocation = temp2->GetActorLocation();
+	//	ReturnStats.ActorStatus = temp2->GetStatusToPlayer();
+	//}
+	//else {
+	//	ReturnStats.ActorType = NULL;
+	//	ReturnStats.ActorLocation = ParentCursorHit.ImpactPoint;
+	//	ReturnStats.ActorStatus = EStatusToPlayer::STP_None;
+	//}
 
-	ReturnStats.HitActor = TempActor;
+	//ReturnStats.HitActor = TempActor;
 
 	return ReturnStats;
 

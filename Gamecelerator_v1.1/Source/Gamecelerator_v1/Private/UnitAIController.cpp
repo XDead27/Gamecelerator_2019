@@ -32,27 +32,13 @@ void AUnitAIController::Tick(float DeltaTime)
 		if (PossesedUnit->getIsSelected())
 			eventClickedUnit();
 
-		switch (PossesedUnit->GetStatusToPlayer())
-		{
-		case EStatusToPlayer::STP_Friendly:
-			if (PossesedUnit->GetActorToAttack()){
-				Attack(Cast<AUnit>(PossesedUnit->GetActorToAttack()));
-			}
-			else {
-				UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, PossesedUnit->TargetPosition);
-			}
-
-			break;
-
-		case EStatusToPlayer::STP_Neutral:
-			break;
-
-		case EStatusToPlayer::STP_Hostile:
-			break;
-
-		default:
-			break;
+		if (PossesedUnit->GetActorToAttack()){
+			Attack(Cast<AUnit>(PossesedUnit->GetActorToAttack()));
 		}
+		else {
+			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, PossesedUnit->TargetPosition);
+		}
+
 	}
 	else {
 		PossesedUnit = Cast<AUnit>(GetPawn());

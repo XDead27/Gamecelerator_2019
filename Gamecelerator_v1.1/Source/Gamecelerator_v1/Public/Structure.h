@@ -30,7 +30,7 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	EStatusToPlayer statusToPlayer;
+	AController* Possesor;
 
 	float Health;
 	bool isClicked;
@@ -42,7 +42,7 @@ protected:
 	void SpawnUnit(TSubclassOf<AUnit> unitclass, EStatusToPlayer status);
 
 public:
-	EStatusToPlayer GetStatusToPlayer();
+	EStatusToPlayer GetStatusToPlayer(AController* RequestingController);
 
 	bool TrainUnit();
 	void ShowInterface();

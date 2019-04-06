@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Public/PlayerSpectatorPawnController.h"
 #include "Kismet/GameplayStatics.h"
+#include "DiplomacyHandlerComponent.h"
 
 // Sets default values
 AUnit::AUnit()
@@ -56,16 +57,21 @@ AController * AUnit::getControllingAI()
 	return ControllingAI;
 }
 
-EStatusToPlayer AUnit::GetStatusToPlayer()
+EStatusToPlayer AUnit::GetStatusToPlayer(AController* RequestingController)
 {
-	return AttackVariables.status;
-}
+	if (RequestingController == Possesor) {
+		return EStatusToPlayer::STP_Owned;
+	}
 
-void AUnit::SetStatusToPlayer(EStatusToPlayer NewStatus)
-{
-	AttackVariables.status = NewStatus;
-}
+	UDiplomacyHandlerComponent* RequestingControllerDiplomacy = Cast<UDiplomacyHandlerComponent>(RequestingController->GetComponentByClass(UDiplomacyHandlerComponent::StaticClass()));
 
+	if (RequestingControllerDiplomacy) {
+		return *RequestingControllerDiplomacy->DiplomacyList.Find(Possesor);
+	}
+	else {
+		return EStatusToPlayer::STP_None;
+	}
+}
 
 AActor * AUnit::GetActorToAttack()
 {

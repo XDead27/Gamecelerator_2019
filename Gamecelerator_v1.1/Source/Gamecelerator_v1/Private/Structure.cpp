@@ -5,6 +5,7 @@
 #include "Engine/World.h"
 #include "Components/WidgetComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "DiplomacyHandlerComponent.h"
 
 // Sets default values
 AStructure::AStructure()
@@ -35,12 +36,23 @@ void AStructure::SpawnUnit(TSubclassOf<AUnit> unitclass, EStatusToPlayer status)
 
 	AUnit* spawnedunit = Cast<AUnit>(GetWorld()->SpawnActor(unitclass, &spawnloc));
 	if(spawnedunit)
-		spawnedunit->SetStatusToPlayer(status);
+		spawnedunit->Possesor = this->Possesor;
 }
 
-EStatusToPlayer AStructure::GetStatusToPlayer()
+EStatusToPlayer AStructure::GetStatusToPlayer(AController* RequestingController)
 {
-	return statusToPlayer;
+	if (RequestingController == Possesor) {
+		return EStatusToPlayer::STP_Owned;
+	}
+
+	UDiplomacyHandlerComponent* RequestingControllerDiplomacy = Cast<UDiplomacyHandlerComponent>(RequestingController->GetComponentByClass(UDiplomacyHandlerComponent::StaticClass()));
+
+	if (RequestingControllerDiplomacy) {
+		return *RequestingControllerDiplomacy->DiplomacyList.Find(Possesor);
+	}
+	else {
+		return EStatusToPlayer::STP_None;
+	}
 }
 
 bool AStructure::TrainUnit()
