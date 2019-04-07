@@ -29,6 +29,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Diplomacy)
 	int ParentControllerTeamIndex;
 
+	int ParentControllerIndex;
+
 	//List of all controllers and this component's parent status with them
 	TMap<AController*, EStatusToPlayer> DiplomacyList;
 		

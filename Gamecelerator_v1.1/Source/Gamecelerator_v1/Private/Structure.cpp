@@ -6,6 +6,7 @@
 #include "Components/WidgetComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "DiplomacyHandlerComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AStructure::AStructure()
@@ -20,6 +21,11 @@ void AStructure::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	Possesor = WaitForPossesor();
+
+	if (Possesor)
+		UE_LOG(LogTemp, Warning, TEXT("%s Possesor %s"), *this->GetName(), *Possesor->GetName())
+
 }
 
 // Called every frame
@@ -27,6 +33,28 @@ void AStructure::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	Possesor = WaitForPossesor();
+
+	
+
+}
+
+AController * AStructure::WaitForPossesor()
+{
+	if (!Possesor) {
+		TArray<AActor*> ControllersArray;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AController::StaticClass(), ControllersArray);
+
+		for (AActor* a : ControllersArray) {
+			if (UDiplomacyHandlerComponent* DipRef = Cast<UDiplomacyHandlerComponent>(a->GetComponentByClass(UDiplomacyHandlerComponent::StaticClass()))) {
+				if (DipRef->ParentControllerIndex == this->PossesorIndex) {
+					return Cast<AController>(a);
+				}
+			}
+		}
+	}
+
+	return nullptr;
 }
 
 // Spawns desired unit at some specified offset from the center location of the actor
@@ -35,8 +63,10 @@ void AStructure::SpawnUnit(TSubclassOf<AUnit> unitclass, EStatusToPlayer status)
 	FVector spawnloc = GetActorLocation() + SpawningOffset;
 
 	AUnit* spawnedunit = Cast<AUnit>(GetWorld()->SpawnActor(unitclass, &spawnloc));
-	if(spawnedunit)
+	if (spawnedunit) {
+		spawnedunit->PossesorIndex = this->PossesorIndex;
 		spawnedunit->Possesor = this->Possesor;
+	}
 }
 
 EStatusToPlayer AStructure::GetStatusToPlayer(AController* RequestingController)
@@ -48,7 +78,7 @@ EStatusToPlayer AStructure::GetStatusToPlayer(AController* RequestingController)
 	UDiplomacyHandlerComponent* RequestingControllerDiplomacy = Cast<UDiplomacyHandlerComponent>(RequestingController->GetComponentByClass(UDiplomacyHandlerComponent::StaticClass()));
 
 	if (RequestingControllerDiplomacy) {
-		return *RequestingControllerDiplomacy->DiplomacyList.Find(Possesor);
+		return RequestingControllerDiplomacy->DiplomacyList.FindRef(Possesor);
 	}
 	else {
 		return EStatusToPlayer::STP_None;

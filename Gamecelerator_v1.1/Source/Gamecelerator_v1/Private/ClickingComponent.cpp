@@ -110,7 +110,7 @@ FHitActorStats UClickingComponent::GetObjectUnderMouseCursorAttributes()
 	//else if (AStructure* temp2 = Cast<AStructure>(TempActor)) {
 	//	ReturnStats.ActorType = AStructure::StaticClass();
 	//	ReturnStats.ActorLocation = temp2->GetActorLocation();
-	//	ReturnStats.ActorStatus = temp2->GetStatusToPlayer();
+	//	ReturnStats.ActorStatus = EStatusToPlayer::STP_Friendly;
 	//}
 	//else {
 	//	ReturnStats.ActorType = NULL;

@@ -6,6 +6,17 @@
 #include "GameFramework/GameModeBase.h"
 #include "GameceleratorModeBase.generated.h"
 
+class AController;
+
+USTRUCT(BlueprintType)
+struct FNestedContainer
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<int, TSubclassOf<AController>> Team;
+};
+
 /**
  * 
  */
@@ -19,4 +30,7 @@ protected:
 
 public:
 	TArray<TArray<AController*>> ListOfTeams;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FNestedContainer> AllControllers;
 };

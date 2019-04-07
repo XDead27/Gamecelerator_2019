@@ -8,6 +8,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "DiplomacyHandlerComponent.h"
 
+#define GETENUMSTRING(etype, evalue) ( (FindObject<UEnum>(ANY_PACKAGE, TEXT(etype), true) != nullptr) ? FindObject<UEnum>(ANY_PACKAGE, TEXT(etype), true)->GetEnumName((int32)evalue) : FString("Invalid - are you sure enum uses UENUM() macro?") )
+
 // Sets default values
 AUnit::AUnit()
 {
@@ -28,13 +30,21 @@ void AUnit::BeginPlay()
 	
 	ControllingAI = GetController();
 	TargetPosition = GetActorLocation();
+	Possesor = WaitForPossesor();
 
+	if(Possesor)
+		UE_LOG(LogTemp, Warning, TEXT("%s Possesor %s"), *this->GetName(), *Possesor->GetName())
 }
 
 // Called every frame
 void AUnit::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	Possesor = WaitForPossesor();
+
+	if (Possesor)
+		UE_LOG(LogTemp, Warning, TEXT("%s Possesor %s"), *this->GetName(), *Possesor->GetName())
 
 	if (HealthVariables.Health <= 0) {
 		OnDeath();
@@ -59,18 +69,46 @@ AController * AUnit::getControllingAI()
 
 EStatusToPlayer AUnit::GetStatusToPlayer(AController* RequestingController)
 {
-	if (RequestingController == Possesor) {
-		return EStatusToPlayer::STP_Owned;
-	}
+	if (RequestingController) {
+		if (RequestingController == Possesor) {
+			return EStatusToPlayer::STP_Owned;
+		}
 
-	UDiplomacyHandlerComponent* RequestingControllerDiplomacy = Cast<UDiplomacyHandlerComponent>(RequestingController->GetComponentByClass(UDiplomacyHandlerComponent::StaticClass()));
+		UDiplomacyHandlerComponent* RequestingControllerDiplomacy = Cast<UDiplomacyHandlerComponent>(Possesor->GetComponentByClass(UDiplomacyHandlerComponent::StaticClass()));
 
-	if (RequestingControllerDiplomacy) {
-		return *RequestingControllerDiplomacy->DiplomacyList.Find(Possesor);
+		if (RequestingControllerDiplomacy) {	
+			return RequestingControllerDiplomacy->DiplomacyList.FindRef(RequestingController);
+		}
+		else {
+			return EStatusToPlayer::STP_None;
+		}
 	}
 	else {
 		return EStatusToPlayer::STP_None;
 	}
+	/*if(RequestingController)
+		UE_LOG(LogTemp, Warning, TEXT("I am called for some fucking reason with argument %s"), *RequestingController->GetName())
+	UE_LOG(LogTemp, Warning, TEXT("Ce pana mea"))*/
+
+	//return EStatusToPlayer::STP_Friendly;
+}
+
+AController * AUnit::WaitForPossesor()
+{
+	if (!Possesor) {
+		TArray<AActor*> ControllersArray;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AController::StaticClass(), ControllersArray);
+
+		for (AActor* a : ControllersArray) {
+			if (UDiplomacyHandlerComponent* DipRef = Cast<UDiplomacyHandlerComponent>(a->GetComponentByClass(UDiplomacyHandlerComponent::StaticClass()))) {
+				if (DipRef->ParentControllerIndex == this->PossesorIndex) {
+					return Cast<AController>(a);
+				}
+			}
+		}
+	}
+
+	return nullptr;
 }
 
 AActor * AUnit::GetActorToAttack()

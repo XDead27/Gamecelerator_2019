@@ -87,10 +87,12 @@ public:
 	AController* getControllingAI();
 
 	///Status to Player
-	UFUNCTION(BlueprintPure, Category = Variables)
+	UFUNCTION(BlueprintPure, Category = Diplomacy)
 	EStatusToPlayer GetStatusToPlayer(AController* RequestingController);
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Variables)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Diplomacy)
+	int PossesorIndex = 0;
 	AController* Possesor;
+	AController* WaitForPossesor();
 
 	AActor* GetActorToAttack();
 

@@ -12,9 +12,13 @@ DE COD:
 	-UI
 	-Interactionat cu alte unitati
 	-De regandit toata mecanica cu Friendly, Neutral si Hostile
-		-de facut o clasa RaceController cu variabile pentru Allied, Enemy si Neutral RaceControllers (DONE)
-		-De refacut GetStatusToPlayer in Unit.h (DONE)
-		-De gasit o metoda de autentificare pentru controller ul care incearca sa mute unitatea
+		-de facut o clasa RaceController cu variabile pentru Allied, Enemy si Neutral RaceControllers 												(DONE)
+		-De refacut GetStatusToPlayer in Unit.h 																		(DONE)
+			-De rezolvat faza cu pointer ul
+		-De gasit o metoda de autentificare pentru controller ul care incearca sa mute unitatea () 												(DONE - il introduc direct in playercontroller: nu e corect dar e usor)
+		-De atribuit fiecarui controller un index ca sa se poata fave atributia de posesori inainte de compile time
+			-De creat un Possesor Index in loc de Possesor 																	(DONE)
+			-In level blueprint de realizat metoda de corespondenta: TMap<Index, TSubClassOf<AController>> sau TMap<Index, PlayerSpectatorPawn*> 						(DONE)
 	-Construit cladiri
 	-AI
 	-De pus Interface uri la Structuri si unitati si de refacut codul unde se diferentiaza

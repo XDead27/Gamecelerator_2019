@@ -4,10 +4,29 @@
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include "DiplomacyHandlerComponent.h"
+#include "RaceControllerPawn.h"
 
 
 void AGameceleratorModeBase::BeginPlay() {
 	Super::BeginPlay();
+
+	for (int i = 0; i < AllControllers.Num(); i++) {
+		for (const TPair<int, TSubclassOf<AController>> CurrController : AllControllers[i].Team) {
+			FActorSpawnParameters SpawnInfo;
+			SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+			ARaceControllerPawn* CurrRacePawn = GetWorld()->SpawnActor<ARaceControllerPawn>(SpawnInfo);
+			
+			AController* CurrRaceController = GetWorld()->SpawnActor<AController>(CurrController.Value, SpawnInfo);
+			CurrRaceController->Possess(CurrRacePawn);
+			UDiplomacyHandlerComponent* DiplomacyComponent = Cast<UDiplomacyHandlerComponent>(CurrRaceController->GetComponentByClass(UDiplomacyHandlerComponent::StaticClass()));
+			if (DiplomacyComponent) {
+				DiplomacyComponent->ParentControllerTeamIndex = i;
+				DiplomacyComponent->ParentControllerIndex = CurrController.Key;
+			}
+		}
+	}
+
 
 	TArray<AActor*> Controllers;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AController::StaticClass(), Controllers);

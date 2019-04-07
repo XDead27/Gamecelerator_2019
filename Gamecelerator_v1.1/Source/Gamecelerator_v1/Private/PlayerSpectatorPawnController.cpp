@@ -57,8 +57,8 @@ void APlayerSpectatorPawnController::PlayerTick(float DeltaTime)
 
 
 	///DEBUG
-	if(AUnit* Temp = Cast<AUnit>(ClickedActor))
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *Temp->Possesor->GetName())
+	//if(AUnit* Temp = Cast<AUnit>(ClickedActor))
+	//	UE_LOG(LogTemp, Warning, TEXT("%s"), *Temp->Possesor->GetName())
 
 }
 

@@ -30,7 +30,9 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int PossesorIndex = 0;
 	AController* Possesor;
+	AController* WaitForPossesor();
 
 	float Health;
 	bool isClicked;
