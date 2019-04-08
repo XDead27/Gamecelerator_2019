@@ -13,18 +13,21 @@ void AGameceleratorModeBase::BeginPlay() {
 
 	for (int i = 0; i < AllControllers.Num(); i++) {
 		for (const TPair<int, TSubclassOf<AController>> CurrController : AllControllers[i].Team) {
+			
 			FActorSpawnParameters SpawnInfo;
 			SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 			AController* CurrRaceController;
 			ARaceControllerPawn* CurrRacePawn;
 
-			if (!CurrController.Value->GetClass()->IsChildOf(APlayerController::StaticClass())) {
+			if (!CurrController.Value->IsChildOf(APlayerController::StaticClass())) {
 				CurrRacePawn = GetWorld()->SpawnActor<ARaceControllerPawn>(SpawnInfo);
 
 				CurrRaceController = GetWorld()->SpawnActor<AController>(CurrController.Value, SpawnInfo);
 
 				CurrRaceController->Possess(CurrRacePawn);
+
+				UE_LOG(LogTemp, Warning, TEXT("%s (%d) is %s"), *CurrRaceController->GetName(), CurrController.Key, *CurrController.Value->GetName())
 			}
 			else {
 				CurrRaceController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
@@ -71,7 +74,7 @@ void AGameceleratorModeBase::BeginPlay() {
 				for (AController* CurrChoosingInstance : CurrChoosingTeam) {
 					if(ListOfTeams.IndexOfByKey(CurrTeam) == ListOfTeams.IndexOfByKey(CurrChoosingTeam) && &CurrInstance != &CurrChoosingInstance)
 						CurrInstanceDiplomacy->DiplomacyList.Add(CurrChoosingInstance, EStatusToPlayer::STP_Friendly);
-					else if(ListOfTeams.IndexOfByKey(CurrChoosingTeam) == 0)
+					else if(ListOfTeams.IndexOfByKey(CurrChoosingTeam) == 0) //de stabilit echipa cu neutrali
 						CurrInstanceDiplomacy->DiplomacyList.Add(CurrChoosingInstance, EStatusToPlayer::STP_Neutral);
 					else
 						CurrInstanceDiplomacy->DiplomacyList.Add(CurrChoosingInstance, EStatusToPlayer::STP_Hostile);

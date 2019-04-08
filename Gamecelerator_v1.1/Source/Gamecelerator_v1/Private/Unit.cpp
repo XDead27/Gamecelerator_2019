@@ -84,7 +84,7 @@ EStatusToPlayer AUnit::GetStatusToPlayer(AController* RequestingController)
 		}
 	}
 	else {
-		UE_LOG(LogTemp, Warning, TEXT("Nu s-a gasit un posesor sau un controller care doreste conectarea: %d"));
+		UE_LOG(LogTemp, Warning, TEXT("Nu s-a gasit un posesor sau un controller care doreste conectarea"));
 
 		if (!Possesor)
 			UE_LOG(LogTemp, Warning, TEXT("Lipseste posesorul"))
