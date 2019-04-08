@@ -14,6 +14,7 @@ APlayerSpectatorPawnController::APlayerSpectatorPawnController() {
 
 	//Subobjects
 	DiplomacyComponent = CreateDefaultSubobject<UDiplomacyHandlerComponent>(TEXT("Diplomacy Component"));
+	DiplomacyComponent->ParentControllerTeamIndex = 0;
 }
 
 void APlayerSpectatorPawnController::BeginPlay()

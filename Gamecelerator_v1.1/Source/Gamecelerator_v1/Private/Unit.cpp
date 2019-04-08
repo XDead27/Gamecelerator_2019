@@ -41,10 +41,10 @@ void AUnit::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	Possesor = WaitForPossesor();
+	//Possesor = WaitForPossesor();
 
-	if (Possesor)
-		UE_LOG(LogTemp, Warning, TEXT("%s Possesor %s"), *this->GetName(), *Possesor->GetName())
+	/*if (Possesor)
+		UE_LOG(LogTemp, Warning, TEXT("%s Possesor %s"), *this->GetName(), *Possesor->GetName())*/
 
 	if (HealthVariables.Health <= 0) {
 		OnDeath();
@@ -69,7 +69,7 @@ AController * AUnit::getControllingAI()
 
 EStatusToPlayer AUnit::GetStatusToPlayer(AController* RequestingController)
 {
-	if (RequestingController) {
+	if (RequestingController && Possesor) {
 		if (RequestingController == Possesor) {
 			return EStatusToPlayer::STP_Owned;
 		}
@@ -84,6 +84,14 @@ EStatusToPlayer AUnit::GetStatusToPlayer(AController* RequestingController)
 		}
 	}
 	else {
+		UE_LOG(LogTemp, Warning, TEXT("Nu s-a gasit un posesor sau un controller care doreste conectarea: %d"));
+
+		if (!Possesor)
+			UE_LOG(LogTemp, Warning, TEXT("Lipseste posesorul"))
+		else if(!RequestingController)
+			UE_LOG(LogTemp, Warning, TEXT("Lipseste requesting player"))
+
+
 		return EStatusToPlayer::STP_None;
 	}
 	/*if(RequestingController)
@@ -108,7 +116,7 @@ AController * AUnit::WaitForPossesor()
 		}
 	}
 
-	return nullptr;
+	return Possesor;
 }
 
 AActor * AUnit::GetActorToAttack()

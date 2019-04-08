@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "DiplomacyHandlerComponent.h"
 #include "RaceControllerPawn.h"
+#include "PlayerSpectatorPawnController.h"
 
 
 void AGameceleratorModeBase::BeginPlay() {
@@ -15,11 +16,22 @@ void AGameceleratorModeBase::BeginPlay() {
 			FActorSpawnParameters SpawnInfo;
 			SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-			ARaceControllerPawn* CurrRacePawn = GetWorld()->SpawnActor<ARaceControllerPawn>(SpawnInfo);
-			
-			AController* CurrRaceController = GetWorld()->SpawnActor<AController>(CurrController.Value, SpawnInfo);
-			CurrRaceController->Possess(CurrRacePawn);
+			AController* CurrRaceController;
+			ARaceControllerPawn* CurrRacePawn;
+
+			if (!CurrController.Value->GetClass()->IsChildOf(APlayerController::StaticClass())) {
+				CurrRacePawn = GetWorld()->SpawnActor<ARaceControllerPawn>(SpawnInfo);
+
+				CurrRaceController = GetWorld()->SpawnActor<AController>(CurrController.Value, SpawnInfo);
+
+				CurrRaceController->Possess(CurrRacePawn);
+			}
+			else {
+				CurrRaceController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+			}
+
 			UDiplomacyHandlerComponent* DiplomacyComponent = Cast<UDiplomacyHandlerComponent>(CurrRaceController->GetComponentByClass(UDiplomacyHandlerComponent::StaticClass()));
+
 			if (DiplomacyComponent) {
 				DiplomacyComponent->ParentControllerTeamIndex = i;
 				DiplomacyComponent->ParentControllerIndex = CurrController.Key;

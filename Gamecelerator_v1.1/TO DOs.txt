@@ -8,15 +8,15 @@ DE COD:
 -in aicontroller si controller sa fie numai cod legat de cum sa fie folosite functiile deja existente de miscare (din pawn si characterele pe care controllerele le poseda)
 
 	Mechanics:
-	-Colectat resurse (DONE)
+	-Colectat resurse 																						(DONE)
 	-UI
 	-Interactionat cu alte unitati
-	-De regandit toata mecanica cu Friendly, Neutral si Hostile
+	-De regandit toata mecanica cu Friendly, Neutral si Hostile																	(DONE)
 		-de facut o clasa RaceController cu variabile pentru Allied, Enemy si Neutral RaceControllers 												(DONE)
 		-De refacut GetStatusToPlayer in Unit.h 																		(DONE)
-			-De rezolvat faza cu pointer ul
+			-De rezolvat faza cu pointer ul																			(DONE)
 		-De gasit o metoda de autentificare pentru controller ul care incearca sa mute unitatea () 												(DONE - il introduc direct in playercontroller: nu e corect dar e usor)
-		-De atribuit fiecarui controller un index ca sa se poata fave atributia de posesori inainte de compile time
+		-De atribuit fiecarui controller un index ca sa se poata fave atributia de posesori inainte de compile time										(DONE)
 			-De creat un Possesor Index in loc de Possesor 																	(DONE)
 			-In level blueprint de realizat metoda de corespondenta: TMap<Index, TSubClassOf<AController>> sau TMap<Index, PlayerSpectatorPawn*> 						(DONE)
 	-Construit cladiri
