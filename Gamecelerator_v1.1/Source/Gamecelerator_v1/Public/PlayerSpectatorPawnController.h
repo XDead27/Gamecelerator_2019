@@ -49,7 +49,8 @@ public:
 	//The component holding the array of allied, hostile and neutral controllers
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Diplomacy)
 	class UDiplomacyHandlerComponent* DiplomacyComponent;
-
+	UFUNCTION(BlueprintPure)
+	bool VerifyCanControlUnit();
 
 	///Click Flags
 	//Classifies clicks by attributed flags

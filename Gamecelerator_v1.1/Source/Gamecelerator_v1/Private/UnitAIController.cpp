@@ -32,8 +32,8 @@ void AUnitAIController::Tick(float DeltaTime)
 		if (PossesedUnit->getIsSelected())
 			eventClickedUnit();
 
-		if (PossesedUnit->GetActorToAttack()){
-			Attack(Cast<AUnit>(PossesedUnit->GetActorToAttack()));
+		if (PossesedUnit->GetActorToAttack() && PossesedUnit->GetActorToAttack()->GetClass()->ImplementsInterface(URaceObjectInterface::StaticClass())){
+			Attack(PossesedUnit->GetActorToAttack());
 		}
 		else {
 			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, PossesedUnit->TargetPosition);
@@ -61,11 +61,11 @@ void AUnitAIController::moveCharacter()
 	
 }
 
-void AUnitAIController::Attack(AUnit * UnitToAttack)
+void AUnitAIController::Attack(AActor * ActorToAttack)
 {
-	if (UnitToAttack) {
-		if (FVector::Dist(PossesedUnit->GetActorLocation(), UnitToAttack->GetActorLocation()) > PossesedUnit->GetAttackRange()) {
-			UAIBlueprintHelperLibrary::SimpleMoveToActor(this, UnitToAttack);
+	if (ActorToAttack) {
+		if (FVector::Dist(PossesedUnit->GetActorLocation(), ActorToAttack->GetActorLocation()) > PossesedUnit->GetAttackRange()) {
+			UAIBlueprintHelperLibrary::SimpleMoveToActor(this, ActorToAttack);
 		}
 		else {
 			//stop the unit and shoot
@@ -74,14 +74,13 @@ void AUnitAIController::Attack(AUnit * UnitToAttack)
 			//timer so that the unit can only attack once every x seconds
 			if (bCanAttack) {
 				bCanAttack = false;
-				UnitToAttack->GetDamaged(PossesedUnit->GetDamagePerHit());
+				//if(ActorToAttack->GetClass()->ImplementsInterface(URaceObjectInterface::StaticClass()))
+				//	IRaceObjectInterface::Execute_GetDamaged(PossesedUnit->GetDamagePerHit());
+				if (IRaceObjectInterface* RaceInterface = Cast<IRaceObjectInterface>(ActorToAttack))
+					RaceInterface->GetDamaged(PossesedUnit->GetDamagePerHit());
 
 				GetWorld()->GetTimerManager().SetTimer(UnitAttackHandle, this, &AUnitAIController::ResetAttack, PossesedUnit->GetTimeBetweenHits(), false);
 			}
 		}
 	}
-}
-
-void AUnitAIController::Attack(AStructure * StructureToAttack)
-{
 }

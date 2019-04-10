@@ -37,6 +37,5 @@ public:
 	void moveCharacter();
 
 	//attack
-	void Attack(AUnit* UnitToAttack);
-	void Attack(AStructure* StructureToAttack);
+	void Attack(AActor* UnitToAttack);
 };

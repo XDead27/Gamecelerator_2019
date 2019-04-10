@@ -12,7 +12,7 @@
 class AUnit;
 
 UCLASS()
-class GAMECELERATOR_V1_API AStructure : public AStructurePrimitive
+class GAMECELERATOR_V1_API AStructure : public AStructurePrimitive, public IRaceObjectInterface
 {
 	GENERATED_BODY()
 	
@@ -30,11 +30,8 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int PossesorIndex = 0;
-	AController* Possesor;
-	AController* WaitForPossesor();
+	int ControllerIndex = 0;
 
-	float Health;
 	bool isClicked;
 
 	UPROPERTY(EditAnywhere)
@@ -44,7 +41,6 @@ protected:
 	void SpawnUnit(TSubclassOf<AUnit> unitclass, EStatusToPlayer status);
 
 public:
-	EStatusToPlayer GetStatusToPlayer(AController* RequestingController);
 
 	bool TrainUnit();
 	void ShowInterface();

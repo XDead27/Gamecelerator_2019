@@ -38,7 +38,7 @@ void APlayerSpectatorPawnController::PlayerTick(float DeltaTime)
 	GetHitResultUnderCursor(ECC_Visibility, false, hitty);
 
 	//Do not register the click unless the clicked actor is AUnit or AStructure
-	if (Cast<AUnit>(hitty.GetActor()) || Cast<AStructurePrimitive>(hitty.GetActor()))
+	if (Cast<IRaceObjectInterface>(hitty.GetActor()))
 		ClickedActor = Cast<AActor>(hitty.GetActor());
 	else
 		ClickedActor = nullptr;
@@ -81,17 +81,25 @@ void APlayerSpectatorPawnController::SetupInputComponent()
 
 }
 
+bool APlayerSpectatorPawnController::VerifyCanControlUnit()
+{
+	if (ControlledUnit->GetStatusToPlayer(this) == EStatusToPlayer::STP_Owned)
+		return true;
+	else
+		return false;
+}
+
 void APlayerSpectatorPawnController::ClassifyByFlag()
 {
 	switch (ClickFlag)
 	{
 	case ENextClickFlag::NCF_Move:
-		if (ControlledUnit)
+		if (ControlledUnit && VerifyCanControlUnit())
 			ControlledUnit->Move(ClickedLocation);
 		break;
 
 	case ENextClickFlag::NCF_Attack:
-		if (ControlledUnit && ClickedActor)
+		if (ControlledUnit && ClickedActor && VerifyCanControlUnit())
 			ControlledUnit->Attack(ClickedActor);
 		break;
 
@@ -169,13 +177,13 @@ void APlayerSpectatorPawnController::FlagGather()
 
 void APlayerSpectatorPawnController::UnitStop()
 {
-	if(ControlledUnit)
+	if(ControlledUnit && VerifyCanControlUnit())
 		ControlledUnit->OnStop();
 }
 
 void APlayerSpectatorPawnController::UnitAbility1()
 {
-	if (ControlledUnit) {
+	if (ControlledUnit && VerifyCanControlUnit()) {
 		ControlledUnit->Ability_1();
 	}
 }

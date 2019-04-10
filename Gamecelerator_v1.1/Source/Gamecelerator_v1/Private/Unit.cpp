@@ -21,6 +21,7 @@ AUnit::AUnit()
 
 	AIControllerClass = AUnitAIController::StaticClass(); 
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
 }
 
 // Called when the game starts or when spawned
@@ -28,12 +29,18 @@ void AUnit::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	//Pass the data to the interface because an interface cannot have blueprint variables
+	//and neither does it have a reference to the world it's placed in
+	PossesorIndex = ControllerIndex;
+	SelfReference = this;
+	IHealthMax = HealthVariables.HealthMax;
+
 	ControllingAI = GetController();
 	TargetPosition = GetActorLocation();
 	Possesor = WaitForPossesor();
 
 	if(Possesor)
-		UE_LOG(LogTemp, Warning, TEXT("%s Possesor %s"), *this->GetName(), *Possesor->GetName())
+		UE_LOG(LogTemp, Warning, TEXT("%s (%d:%d) Possesor %s"), *this->GetName(), ControllerIndex, PossesorIndex, *Possesor->GetName())
 }
 
 // Called every frame
@@ -67,57 +74,6 @@ AController * AUnit::getControllingAI()
 	return ControllingAI;
 }
 
-EStatusToPlayer AUnit::GetStatusToPlayer(AController* RequestingController)
-{
-	if (RequestingController && Possesor) {
-		if (RequestingController == Possesor) {
-			return EStatusToPlayer::STP_Owned;
-		}
-
-		UDiplomacyHandlerComponent* RequestingControllerDiplomacy = Cast<UDiplomacyHandlerComponent>(Possesor->GetComponentByClass(UDiplomacyHandlerComponent::StaticClass()));
-
-		if (RequestingControllerDiplomacy) {	
-			return RequestingControllerDiplomacy->DiplomacyList.FindRef(RequestingController);
-		}
-		else {
-			return EStatusToPlayer::STP_None;
-		}
-	}
-	else {
-		UE_LOG(LogTemp, Warning, TEXT("Nu s-a gasit un posesor sau un controller care doreste conectarea"));
-
-		if (!Possesor)
-			UE_LOG(LogTemp, Warning, TEXT("Lipseste posesorul"))
-		else if(!RequestingController)
-			UE_LOG(LogTemp, Warning, TEXT("Lipseste requesting player"))
-
-
-		return EStatusToPlayer::STP_None;
-	}
-	/*if(RequestingController)
-		UE_LOG(LogTemp, Warning, TEXT("I am called for some fucking reason with argument %s"), *RequestingController->GetName())
-	UE_LOG(LogTemp, Warning, TEXT("Ce pana mea"))*/
-
-	//return EStatusToPlayer::STP_Friendly;
-}
-
-AController * AUnit::WaitForPossesor()
-{
-	if (!Possesor) {
-		TArray<AActor*> ControllersArray;
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AController::StaticClass(), ControllersArray);
-
-		for (AActor* a : ControllersArray) {
-			if (UDiplomacyHandlerComponent* DipRef = Cast<UDiplomacyHandlerComponent>(a->GetComponentByClass(UDiplomacyHandlerComponent::StaticClass()))) {
-				if (DipRef->ParentControllerIndex == this->PossesorIndex) {
-					return Cast<AController>(a);
-				}
-			}
-		}
-	}
-
-	return Possesor;
-}
 
 AActor * AUnit::GetActorToAttack()
 {
@@ -141,13 +97,13 @@ float AUnit::GetAttackRange()
 
 float AUnit::GetHealth()
 {
-	return HealthVariables.Health;
+	return IHealthRemaining;
 }
 
 float AUnit::SetHealth(float Amount)
 {
-	HealthVariables.Health = Amount;
-	return HealthVariables.Health;
+	IHealthRemaining = Amount;
+	return IHealthRemaining;
 }
 
 float AUnit::GetMaxHealth()

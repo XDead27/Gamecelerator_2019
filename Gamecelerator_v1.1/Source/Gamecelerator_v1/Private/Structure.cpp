@@ -21,6 +21,11 @@ void AStructure::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	//Pass the data to the interface because an interface cannot have blueprint variables
+	//and neither does it have a reference to the world it's placed in
+	PossesorIndex = ControllerIndex;
+	SelfReference = this;
+
 	Possesor = WaitForPossesor();
 
 	if (Possesor)
@@ -39,24 +44,6 @@ void AStructure::Tick(float DeltaTime)
 
 }
 
-AController * AStructure::WaitForPossesor()
-{
-	if (!Possesor) {
-		TArray<AActor*> ControllersArray;
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AController::StaticClass(), ControllersArray);
-
-		for (AActor* a : ControllersArray) {
-			if (UDiplomacyHandlerComponent* DipRef = Cast<UDiplomacyHandlerComponent>(a->GetComponentByClass(UDiplomacyHandlerComponent::StaticClass()))) {
-				if (DipRef->ParentControllerIndex == this->PossesorIndex) {
-					return Cast<AController>(a);
-				}
-			}
-		}
-	}
-
-	return nullptr;
-}
-
 // Spawns desired unit at some specified offset from the center location of the actor
 void AStructure::SpawnUnit(TSubclassOf<AUnit> unitclass, EStatusToPlayer status)
 {
@@ -66,22 +53,6 @@ void AStructure::SpawnUnit(TSubclassOf<AUnit> unitclass, EStatusToPlayer status)
 	if (spawnedunit) {
 		spawnedunit->PossesorIndex = this->PossesorIndex;
 		spawnedunit->Possesor = this->Possesor;
-	}
-}
-
-EStatusToPlayer AStructure::GetStatusToPlayer(AController* RequestingController)
-{
-	if (RequestingController == Possesor) {
-		return EStatusToPlayer::STP_Owned;
-	}
-
-	UDiplomacyHandlerComponent* RequestingControllerDiplomacy = Cast<UDiplomacyHandlerComponent>(RequestingController->GetComponentByClass(UDiplomacyHandlerComponent::StaticClass()));
-
-	if (RequestingControllerDiplomacy) {
-		return RequestingControllerDiplomacy->DiplomacyList.FindRef(Possesor);
-	}
-	else {
-		return EStatusToPlayer::STP_None;
 	}
 }
 

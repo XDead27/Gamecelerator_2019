@@ -6,6 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "GameFramework/Character.h"
 #include "Public/Enumuri.h"
+#include "RaceObjectInterface.h"
 #include "Unit.generated.h"
 
 ///*********************
@@ -60,7 +61,7 @@ struct FMovementVariables
 //CLASS
 ///*********************
 UCLASS()
-class GAMECELERATOR_V1_API AUnit : public ACharacter
+class GAMECELERATOR_V1_API AUnit : public ACharacter, public IRaceObjectInterface
 {
 	GENERATED_BODY()
 
@@ -87,12 +88,9 @@ public:
 	AController* getControllingAI();
 
 	///Status to Player
-	UFUNCTION(BlueprintPure, Category = Diplomacy)
-	EStatusToPlayer GetStatusToPlayer(AController* RequestingController);
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Diplomacy)
-	int PossesorIndex = 0;
-	AController* Possesor;
-	AController* WaitForPossesor();
+	int ControllerIndex = 0;
+
 
 	AActor* GetActorToAttack();
 
@@ -113,9 +111,7 @@ public:
 	UFUNCTION(BlueprintPure, Category = Variables)
 	float GetMaxHealth();
 
-	//Blueprint mixed functions
-	UFUNCTION(BlueprintImplementableEvent)
-	void GetDamaged(float amount);
+
 
 	FVector TargetPosition;
 
