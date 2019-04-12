@@ -36,7 +36,7 @@ void AWorkerUnit::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	if (bIsGathering) {
-		UE_LOG(LogTemp, Warning, TEXT("Should Gather"))
+		//UE_LOG(LogTemp, Warning, TEXT("Should Gather"))
 
 		if (!(StructureToGatherFrom && StructureToGatherTo)) {
 			WaitForParsing(StructureToGatherFrom);

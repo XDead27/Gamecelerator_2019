@@ -34,6 +34,7 @@ void AUnit::BeginPlay()
 	PossesorIndex = ControllerIndex;
 	SelfReference = this;
 	IHealthMax = HealthVariables.HealthMax;
+	IHealthRemaining = IHealthMax;
 
 	ControllingAI = GetController();
 	TargetPosition = GetActorLocation();
@@ -53,7 +54,7 @@ void AUnit::Tick(float DeltaTime)
 	/*if (Possesor)
 		UE_LOG(LogTemp, Warning, TEXT("%s Possesor %s"), *this->GetName(), *Possesor->GetName())*/
 
-	if (HealthVariables.Health <= 0) {
+	if (IHealthRemaining <= 0) {
 		OnDeath();
 	}
 

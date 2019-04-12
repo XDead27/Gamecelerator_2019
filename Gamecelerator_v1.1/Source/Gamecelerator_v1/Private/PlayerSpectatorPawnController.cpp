@@ -38,7 +38,7 @@ void APlayerSpectatorPawnController::PlayerTick(float DeltaTime)
 	GetHitResultUnderCursor(ECC_Visibility, false, hitty);
 
 	//Do not register the click unless the clicked actor is AUnit or AStructure
-	if (Cast<IRaceObjectInterface>(hitty.GetActor()))
+	if (Cast<IRaceObjectInterface>(hitty.GetActor()) || Cast<AStructurePrimitive>(hitty.GetActor()))
 		ClickedActor = Cast<AActor>(hitty.GetActor());
 	else
 		ClickedActor = nullptr;
@@ -58,8 +58,8 @@ void APlayerSpectatorPawnController::PlayerTick(float DeltaTime)
 
 
 	///DEBUG
-	//if(AUnit* Temp = Cast<AUnit>(ClickedActor))
-	//	UE_LOG(LogTemp, Warning, TEXT("%s"), *Temp->Possesor->GetName())
+	//if(auto Temp = Cast<IRaceObjectInterface>(ClickedActor))
+	//	UE_LOG(LogTemp, Warning, TEXT("%s"), *Temp->SelfReference->GetName())
 
 }
 
@@ -134,6 +134,7 @@ void APlayerSpectatorPawnController::GiveNormalFlags()
 	}
 }
 
+//To do with interfaces
 void APlayerSpectatorPawnController::SelectActor(AActor* ActorToSelect)
 {
 	if (Cast<AUnit>(ActorToSelect)) {

@@ -65,4 +65,5 @@ AController * IRaceObjectInterface::WaitForPossesor()
 void IRaceObjectInterface::GetDamaged(float amount)
 {
 	IHealthRemaining -= amount;
+	UE_LOG(LogTemp, Warning, TEXT("Should be taking damage tho"))
 }
