@@ -7,6 +7,7 @@
 #include "Math/UnrealMathVectorCommon.h"
 #include "ClickingComponent.h"
 #include "DiplomacyHandlerComponent.h"
+#include "RacePrimitive.h"
 
 
 APlayerSpectatorPawnController::APlayerSpectatorPawnController() {
@@ -37,8 +38,8 @@ void APlayerSpectatorPawnController::PlayerTick(float DeltaTime)
 	FHitResult hitty;
 	GetHitResultUnderCursor(ECC_Visibility, false, hitty);
 
-	//Do not register the click unless the clicked actor is AUnit or AStructure
-	if (Cast<IRaceObjectInterface>(hitty.GetActor()) || Cast<AStructurePrimitive>(hitty.GetActor()))
+	//Do not register the click unless the clicked actor is a IRacePrimitive actor
+	if (Cast<IRacePrimitive>(hitty.GetActor()))
 		ClickedActor = Cast<AActor>(hitty.GetActor());
 	else
 		ClickedActor = nullptr;
@@ -58,8 +59,8 @@ void APlayerSpectatorPawnController::PlayerTick(float DeltaTime)
 
 
 	///DEBUG
-	//if(auto Temp = Cast<IRaceObjectInterface>(ClickedActor))
-	//	UE_LOG(LogTemp, Warning, TEXT("%s"), *Temp->SelfReference->GetName())
+	if(auto Temp = Cast<IRacePrimitive>(ClickedActor))
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *ClickedActor->GetName())
 
 }
 

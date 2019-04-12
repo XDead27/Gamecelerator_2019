@@ -21,4 +21,5 @@ DE COD:
 			-In level blueprint de realizat metoda de corespondenta: TMap<Index, TSubClassOf<AController>> sau TMap<Index, PlayerSpectatorPawn*> 						(DONE)
 	-Construit cladiri
 	-AI
-	-De pus Interface uri la Structuri si unitati si de refacut codul unde se diferentiaza
+	-De pus Interface uri la Structuri si unitati si de refacut codul unde se diferentiaza														(DONE)
+		-De implementat functia de OnSelect() 

@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "RacePrimitive.h"
 #include "StructurePrimitive.generated.h"
 
 class UBoxComponent;
 
 UCLASS()
-class GAMECELERATOR_V1_API AStructurePrimitive : public AActor
+class GAMECELERATOR_V1_API AStructurePrimitive : public AActor, public IRacePrimitive
 {
 	GENERATED_BODY()
 	

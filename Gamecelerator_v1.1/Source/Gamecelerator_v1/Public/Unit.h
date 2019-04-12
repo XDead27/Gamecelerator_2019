@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "Public/Enumuri.h"
 #include "RaceObjectInterface.h"
+#include "RacePrimitive.h"
 #include "Unit.generated.h"
 
 ///*********************
@@ -61,7 +62,7 @@ struct FMovementVariables
 //CLASS
 ///*********************
 UCLASS()
-class GAMECELERATOR_V1_API AUnit : public ACharacter, public IRaceObjectInterface
+class GAMECELERATOR_V1_API AUnit : public ACharacter, public IRaceObjectInterface, public IRacePrimitive
 {
 	GENERATED_BODY()
 
