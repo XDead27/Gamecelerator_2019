@@ -49,10 +49,10 @@ void AUnit::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//Possesor = WaitForPossesor();
-
-	/*if (Possesor)
-		UE_LOG(LogTemp, Warning, TEXT("%s Possesor %s"), *this->GetName(), *Possesor->GetName())*/
+	if (bSearchAttack) {
+		if (!ActorToAttack)
+			WaitForParsing(ActorToAttack);
+	}
 
 	if (IHealthRemaining <= 0) {
 		OnDeath();
@@ -112,13 +112,18 @@ float AUnit::GetMaxHealth()
 	return HealthVariables.HealthMax;
 }
 
-void AUnit::SetParameterActor(AActor * Actor)
-{
-	ParameterActor = Actor;
-}
-
 void AUnit::Ability_1()
 {
+}
+
+void AUnit::Ability_2()
+{
+	Move(GetParameterLocation());
+}
+
+void AUnit::Ability_3()
+{
+	bSearchAttack = true;
 }
 
 void AUnit::Move(FVector NewLoc)

@@ -67,3 +67,18 @@ void IRaceObjectInterface::GetDamaged(float amount)
 	IHealthRemaining -= amount;
 	UE_LOG(LogTemp, Warning, TEXT("Should be taking damage tho"))
 }
+
+void IRaceObjectInterface::SetParameterActor(AActor * ActorForParsing)
+{
+	ParameterActor = ActorForParsing;
+}
+
+FVector IRaceObjectInterface::GetParameterLocation()
+{
+	auto RaceController = Cast<IRaceControllerInterface>(Possesor);
+
+	if (RaceController)
+		return RaceController->GetClickedLocation;
+	else
+		return FVector();
+}

@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include "Enumuri.h"
+#include "Kismet/GameplayStatics.h"
+#include "Engine//World.h"
 #include "RaceObjectInterface.generated.h"
 
 class AController;
@@ -39,6 +41,44 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void GetDamaged(float amount);
 
+	///Abilities & functions
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	virtual void Ability_1() = 0;
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	virtual void Ability_2() = 0;
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	virtual void Ability_3() = 0;
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	virtual void Ability_4() = 0;
+
+
+	///Parsing
+	//Actor
+	template <class T>
+	void WaitForParsing(T* &a);
+	void SetParameterActor(AActor* ActorForParsing);
+
+	//Location
+	FVector GetParameterLocation();
+
 protected:
 	float IHealthRemaining;
+
+private:
+	AActor* ParameterActor;
 };
+
+//Template functions TODO
+template <class T>
+void IRaceObjectInterface::WaitForParsing(T* &a) {
+	if (a == nullptr) {
+		auto RaceController = Cast<IRaceControllerInterface>(Possesor);
+		if(RaceController)
+			ParameterActor = RaceController->GetClickedActor();
+
+		if (Cast<T>(ParameterActor)) {
+			a = Cast<T>(ParameterActor);
+			ParameterActor = nullptr;
+		}
+	}
+}

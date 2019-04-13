@@ -113,14 +113,11 @@ public:
 	float GetMaxHealth();
 
 
-
+	AActor* ActorToAttack;
 	FVector TargetPosition;
 
 protected:
 	AController* ControllingAI;
-	//ActorToAttack should be replaced with ParameterActor for future updates
-	AActor* ActorToAttack;
-	AActor* ParameterActor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool isSelected;
@@ -136,35 +133,16 @@ protected:
 	FMovementVariables MovementVariables;
 
 public:
-	///Parameter Actors
-	template <class T>
-	void WaitForParsing(T* &a);
-	void SetParameterActor(AActor* Actor);
-
-	///Gameplay Functions
-	//Ability abstract functions
-	UFUNCTION(BlueprintCallable, Category = Abilities)
+	///Overridden abilities
 	virtual void Ability_1();
+	virtual void Ability_2() override;
+	virtual void Ability_3() override;
+
+	bool bSearchAttack = false;
 
 	//General natural functions
 	virtual void OnDeath();
 	virtual void OnStop();
 };
 
-//Template functions
-template <class T>
-void AUnit::WaitForParsing(T* &a) {
-	if (a == nullptr) {
-		APlayerSpectatorPawnController* playercont = Cast<APlayerSpectatorPawnController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-		if (playercont)
-			playercont->SetParsingSelectToUnit(this);
-		else
-			UE_LOG(LogTemp, Warning, TEXT("PlayerConroller not found"))
 
-
-		if (Cast<T>(ParameterActor)) {
-			a = Cast<T>(ParameterActor);
-			ParameterActor = nullptr;
-		}
-	}
-}

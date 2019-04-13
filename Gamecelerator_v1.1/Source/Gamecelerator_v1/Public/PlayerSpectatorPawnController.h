@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "Public/Enumuri.h"
+#include "RaceControllerInterface.h"
 #include "PlayerSpectatorPawnController.generated.h"
 
 class AUnit;
@@ -14,7 +15,7 @@ class UDiplomacyHandlerComponent;
  * 
  */
 UCLASS()
-class GAMECELERATOR_V1_API APlayerSpectatorPawnController : public APlayerController
+class GAMECELERATOR_V1_API APlayerSpectatorPawnController : public APlayerController, public IRaceControllerInterface
 {
 	GENERATED_BODY()
 
@@ -50,7 +51,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Diplomacy)
 	class UDiplomacyHandlerComponent* DiplomacyComponent;
 	UFUNCTION(BlueprintPure)
-	bool VerifyCanControlUnit();
+	bool VerifyCanControlActor();
 
 	///Click Flags
 	//Classifies clicks by attributed flags
@@ -67,14 +68,13 @@ public:
 	void UnitStop();
 
 	///Abilities
-	void UnitAbility1();
+	void ActorAbility1();
+	void ActorAbility2();
+	void ActorAbility3();
+	void ActorAbility4();
 
 	///Resource
 	void AddResource(EResourceType restype, int amount);
-
-	//Parsing of selected actors
-	void SetParsingSelectToUnit(AUnit* UnitToParseTo);
-	AUnit* UnitToParseTo;
 
 	//Camera movements
 	void MoveForward(float speed);
@@ -84,10 +84,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Flags)
 	ENextClickFlag DefaultFlag = ENextClickFlag::NCF_Select;
 
-	///For clicking ONLY
-	AActor* ClickedActor;
-	FVector ClickedLocation;
-
 private:
 	FVector2D CameraMovementInput;
+
+
 };

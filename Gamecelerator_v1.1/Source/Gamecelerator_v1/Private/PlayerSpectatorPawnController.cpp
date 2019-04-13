@@ -39,7 +39,7 @@ void APlayerSpectatorPawnController::PlayerTick(float DeltaTime)
 	GetHitResultUnderCursor(ECC_Visibility, false, hitty);
 
 	//Do not register the click unless the clicked actor is a IRacePrimitive actor
-	if (Cast<IRacePrimitive>(hitty.GetActor()))
+	if (Cast<IRacePrimitive>(hitty.GetActor()) && bIsClicking)
 		ClickedActor = Cast<AActor>(hitty.GetActor());
 	else
 		ClickedActor = nullptr;
@@ -75,16 +75,18 @@ void APlayerSpectatorPawnController::SetupInputComponent()
 	InputComponent->BindAction("Escape", IE_Pressed, this, &APlayerSpectatorPawnController::FlagEsc);
 	InputComponent->BindAction("Stop", IE_Pressed, this, &APlayerSpectatorPawnController::UnitStop);
 
-	InputComponent->BindAction("Ability1", IE_Pressed, this, &APlayerSpectatorPawnController::UnitAbility1);
+	InputComponent->BindAction("Ability1", IE_Pressed, this, &APlayerSpectatorPawnController::ActorAbility1);
 
 	InputComponent->BindAxis("MoveForward", this, &APlayerSpectatorPawnController::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &APlayerSpectatorPawnController::MoveRight);
 
 }
 
-bool APlayerSpectatorPawnController::VerifyCanControlUnit()
+bool APlayerSpectatorPawnController::VerifyCanControlActor()
 {
-	if (ControlledUnit->GetStatusToPlayer(this) == EStatusToPlayer::STP_Owned)
+	auto RaceActor = Cast<IRaceObjectInterface>(ControlledActor);
+
+	if (RaceActor->GetStatusToPlayer(this) == EStatusToPlayer::STP_Owned)
 		return true;
 	else
 		return false;
@@ -92,7 +94,7 @@ bool APlayerSpectatorPawnController::VerifyCanControlUnit()
 
 void APlayerSpectatorPawnController::ClassifyByFlag()
 {
-	switch (ClickFlag)
+	/*switch (ClickFlag)
 	{
 	case ENextClickFlag::NCF_Move:
 		if (ControlledUnit && VerifyCanControlUnit())
@@ -122,17 +124,17 @@ void APlayerSpectatorPawnController::ClassifyByFlag()
 
 	default:
 		break;
-	}
+	}*/
 }
 
 void APlayerSpectatorPawnController::GiveNormalFlags()
 {
-	if (ClickFlag == DefaultFlag) {
-		//If a unit is selected but there is nothing under the cursor then activate the move flag
-		if (ControlledUnit && !ClickedActor) {
-			FlagMove();
-		}
-	}
+	//if (ClickFlag == DefaultFlag) {
+	//	//If a unit is selected but there is nothing under the cursor then activate the move flag
+	//	if (ControlledUnit && !ClickedActor) {
+	//		FlagMove();
+	//	}
+	//}
 }
 
 //To do with interfaces
@@ -179,14 +181,43 @@ void APlayerSpectatorPawnController::FlagGather()
 
 void APlayerSpectatorPawnController::UnitStop()
 {
-	if(ControlledUnit && VerifyCanControlUnit())
+	if(ControlledUnit && VerifyCanControlActor())
 		ControlledUnit->OnStop();
 }
 
-void APlayerSpectatorPawnController::UnitAbility1()
+void APlayerSpectatorPawnController::ActorAbility1()
 {
-	if (ControlledUnit && VerifyCanControlUnit()) {
-		ControlledUnit->Ability_1();
+	if (ControlledActor && VerifyCanControlActor()) {
+		auto RaceActor = Cast<IRaceObjectInterface>(ControlledActor);
+		if(RaceActor)
+			RaceActor->Ability_1();
+	}
+}
+
+void APlayerSpectatorPawnController::ActorAbility2()
+{
+	if (ControlledActor && VerifyCanControlActor()) {
+		auto RaceActor = Cast<IRaceObjectInterface>(ControlledActor);
+		if (RaceActor)
+			RaceActor->Ability_2();
+	}
+}
+
+void APlayerSpectatorPawnController::ActorAbility3()
+{
+	if (ControlledActor && VerifyCanControlActor()) {
+		auto RaceActor = Cast<IRaceObjectInterface>(ControlledActor);
+		if (RaceActor)
+			RaceActor->Ability_3();
+	}
+}
+
+void APlayerSpectatorPawnController::ActorAbility4()
+{
+	if (ControlledActor && VerifyCanControlActor()) {
+		auto RaceActor = Cast<IRaceObjectInterface>(ControlledActor);
+		if (RaceActor)
+			RaceActor->Ability_4();
 	}
 }
 
@@ -195,12 +226,6 @@ void APlayerSpectatorPawnController::AddResource(EResourceType restype, int amou
 	if (restype == Resource1Type) {
 		Resource1 += amount;
 	}
-}
-
-void APlayerSpectatorPawnController::SetParsingSelectToUnit(AUnit * UnitToParseTo)
-{
-	FlagSelect();
-	this->UnitToParseTo = UnitToParseTo;
 }
 
 void APlayerSpectatorPawnController::MoveForward(float speed) {
